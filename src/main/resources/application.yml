@@ -1,0 +1,68 @@
+# DEFAULT
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+# JWT
+spring:
+  jwt:
+    expire:
+      access: 3600000
+      refresh: 1209600000
+
+#    secret: ENC(FZm2+cnNzBUJNDxOUQFnvLAXbbvCJtgr+kRiw4avSMhdYVmMOyqnQMJ1Xprtr2oslRDtdew6FNcEJschjZzcW9PQEPgufl1uJuga5slxY00=)
+
+  profiles:
+    active: local
+    include: key
+
+  #JPA 설정
+#  jpa:
+#    hibernate:
+#      ddl-auto: validate
+#    show-sql: true
+#    # SQL 포매터
+#    properties:
+#      hibernate:
+#        format_sql: true
+#
+#    sql:
+#      init:
+#        mode: always
+
+#Swagger
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui/index.html
+
+---
+#Local 개발 프로필
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: ${local-db.url}
+    username: ${local-db.username}
+    password: ${local-db.pw}
+
+---
+#Dev 프로필
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+# 이후 Jasypt 암호화 적용
+#  datasource:
+#    url: ENC(2s3GbD+RmguDe8sf4x9zruUcUkhvriRbtr/ex8W9Phopo8BDIEGNRyJWvYlnau3Q7BeILSBx4Q6REhiKvJ6DABCzxbCAahFIEBkWYkO+/bfgCSt9/U8KWeGkaH2ygOEL)
+#    username: ENC(SlMRhFRwRUHykyE/Q6iYeQ==)
+#    password: ENC(pqXzPS8uDa5NNDNvoez6y6eZsFHNnXTI)
+#    driver-class-name: com.mysql.cj.jdbc.Driver
