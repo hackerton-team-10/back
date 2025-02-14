@@ -28,14 +28,14 @@ public enum ResourceType {
      * 토큰 없이 호출 가능
      */
     OpenResource(
-            Collections.singletonList("/api/open/"),
+            Collections.singletonList("/api/v1/open"),
             emptyList(),
             false, // 토큰 불필요 리소스
             true
     ),
 
     ApiResources(
-            Collections.singletonList("/api/"),
+            Collections.singletonList("/api/v1"),
             emptyList(),
             true, // 토큰 필요 리소스
             true
