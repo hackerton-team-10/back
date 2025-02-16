@@ -15,4 +15,4 @@ ARG ENVIRONMENT
 ENV SPRING_PROFILES_ACTIVE=dev
 
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+ENTRYPOINT ["java", "-Dspring.profiles.active=dev", "-Dencryptor.key=blaybus", "-jar", "/app.jar"]
