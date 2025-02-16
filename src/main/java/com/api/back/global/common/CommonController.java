@@ -3,16 +3,26 @@ package com.api.back.global.common;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
 import com.api.back.global.config.security.jwt.JWTUtil;
+import com.api.back.global.error.exception.BusinessLogicException;
+import com.api.back.global.error.exception.ErrorCode;
+import com.api.back.global.error.exception.InvalidValueException;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.http.Cookie;
 
 @RestController
 @RequestMapping("/v1")
@@ -33,10 +43,63 @@ public class CommonController {
     }
 
     @GetMapping("/dev/token")
+    @Operation(summary = "개발용 토큰 발급 엔드포인트", description = "개발용 3시간 AccessToken 발급")
+    @Parameter(name = "name", required = true, description = "사용자 이름")
+    @ApiResponse(responseCode = "201", description = "Success", content = {@Content(mediaType = "application/json", schema = @Schema(type = "String"))})
     public ResponseEntity<WrapResponse<String>> getDevToken(@RequestParam("name") String name) {
 
-        String response = jwtUtil.createJwt("access", name, "ROLE_USER", 1000 * 60 * 60L);
+        String response = jwtUtil.createJwt("access", name, "ROLE_USER", 1000 * 60 * 60 * 3L);
 
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.STATUS_201));
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<WrapResponse<?>> reissue(HttpServletRequest request, HttpServletResponse response) {
+
+        //get refresh token
+        String refresh = null;
+        Cookie[] cookies = request.getCookies();
+        for (Cookie cookie : cookies) {
+
+            if (cookie.getName().equals("refresh")) {
+
+                refresh = cookie.getValue();
+            }
+        }
+
+        if (refresh == null) {
+
+            //response status code
+            throw new InvalidValueException(ErrorCode.INVALID_REQUEST_PARAM);
+        }
+
+        //expired check
+        try {
+            jwtUtil.isExpired(refresh);
+        } catch (ExpiredJwtException e) {
+
+            //response status code
+            throw new InvalidValueException(ErrorCode.REFRESHTOKEN_EXPIRED);
+        }
+
+        // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
+        String category = jwtUtil.getCategory(refresh);
+
+        if (!category.equals("refresh")) {
+
+            //response status code
+            throw new InvalidValueException(ErrorCode.INVALID_REQUEST_PARAM);
+        }
+
+        String userName = jwtUtil.getUsername(refresh);
+        String role = jwtUtil.getRole(refresh);
+
+        //make new JWT
+        String newAccess = jwtUtil.createJwt("access", userName, role, 600000L);
+
+        //response
+        response.setHeader("access", newAccess);
+
+        return ResponseEntity.ok(WrapResponse.create("액세스 토큰 생성 완료", SuccessType.STATUS_201));
     }
 }
