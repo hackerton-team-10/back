@@ -18,18 +18,19 @@ spring:
     include: key
 
   #JPA 설정
-#  jpa:
-#    hibernate:
-#      ddl-auto: validate
-#    show-sql: true
-#    # SQL 포매터
-#    properties:
-#      hibernate:
-#        format_sql: true
-#
-#    sql:
-#      init:
-#        mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+      show-sql: true
+    # SQL 포매터
+    properties:
+      hibernate:
+        format_sql: true
+    sql:
+      init:
+        mode: always
 
 #Swagger
 springdoc:
@@ -47,11 +48,12 @@ spring:
     activate:
       on-profile: local
 
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    url: ${local-db.url}
-    username: ${local-db.username}
-    password: ${local-db.pw}
+# maria DB로 대체
+#  datasource:
+#    driver-class-name: com.mysql.jdbc.Driver
+#    url: ${local-db.url}
+#    username: ENC(995yKJ+4XySjW/FqXijcsw==)
+#    password: ${local-db.pw}
 
 ---
 #Dev 프로필
@@ -60,9 +62,9 @@ spring:
     activate:
       on-profile: dev
 
-# 이후 Jasypt 암호화 적용
-#  datasource:
-#    url: ENC(2s3GbD+RmguDe8sf4x9zruUcUkhvriRbtr/ex8W9Phopo8BDIEGNRyJWvYlnau3Q7BeILSBx4Q6REhiKvJ6DABCzxbCAahFIEBkWYkO+/bfgCSt9/U8KWeGkaH2ygOEL)
-#    username: ENC(SlMRhFRwRUHykyE/Q6iYeQ==)
-#    password: ENC(pqXzPS8uDa5NNDNvoez6y6eZsFHNnXTI)
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+#  데이터베이스 연동 필요
+  datasource:
+    url: ENC(cYdS1V7cLnCsn4wojCdiCQhyQd1J72zlLu6GIxQUYllj+Uwn5Mt+fIytyuJT17aRNmzhYhu1DvxIacJAexe9m5iydghLty0HgZZ/tS7JjCEmjP0f9qE2ow==)
+    username: ENC(KlpDcGHRN9vXvSjoKPZoXg==)
+    password: ENC(+BQknx5kOfehm8UGVEhMjka9oqRmRVta)
+    driver-class-name: org.mariadb.jdbc.Driver

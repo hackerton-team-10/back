@@ -41,7 +41,10 @@ dependencies {
 
 
     //mysql driver
-    runtimeOnly 'com.mysql:mysql-connector-j'
+//    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //maria driver
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     //h2 DB
     runtimeOnly 'com.h2database:h2'
@@ -51,6 +54,10 @@ dependencies {
 
     //ModelMapper
     implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.2.0'
+
+    //Jasypt
+    implementation group: 'com.github.ulisesbocchio', name: 'jasypt-spring-boot-starter', version: '3.0.5'
+
 
     // JSON Web Token (JWT) library - jjwt
 //    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
