@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping("/v1")
 @Tag(name = "Open API (no auth)")
 public class CommonController {
@@ -37,7 +35,7 @@ public class CommonController {
     @GetMapping("/dev/token")
     public ResponseEntity<WrapResponse<String>> getDevToken(@RequestParam("name") String name) {
 
-        String response = jwtUtil.createJwt(name, "ROLE_USER", 1000 * 60 * 60L);
+        String response = jwtUtil.createJwt("access", name, "ROLE_USER", 1000 * 60 * 60L);
 
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.STATUS_201));
     }

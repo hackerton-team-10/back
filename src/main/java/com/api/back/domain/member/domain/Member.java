@@ -1,4 +1,4 @@
-package com.api.back.domain.member.entity;
+package com.api.back.domain.member.domain;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -45,4 +45,11 @@ public class Member {
     @Column(name = "updated_at", nullable = false)
     @Builder.Default
     private LocalDateTime updatedDate = LocalDateTime.now();
+
+    public void updateName(String name) {this.name = name;}
+
+    public void updateEmail(String email) {this.email = email;}
+
+    public void updateDate() {this.updatedDate = LocalDateTime.now();}
+
 }

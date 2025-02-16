@@ -1,18 +1,21 @@
-package org.example.google_oauth2.jwt;
+package com.api.back.global.config.security.jwt;
 
+import com.api.back.global.config.security.dto.CustomOAuth2User;
+import com.api.back.global.config.security.dto.MemberDto;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.example.google_oauth2.dto.CustomOAuth2User;
-import org.example.google_oauth2.dto.MemberDto;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+@Slf4j
 public class JWTFilter extends OncePerRequestFilter {
 
     private final JWTUtil jwtUtil;
@@ -30,7 +33,8 @@ public class JWTFilter extends OncePerRequestFilter {
         Cookie[] cookies = request.getCookies();
 
         if(cookies == null) {
-            System.out.println("cookies is null");
+            log.info("cookies is null");
+
             filterChain.doFilter(request, response);
 
             //조건이 해당되면 메소드 종료 (필수)
@@ -59,16 +63,26 @@ public class JWTFilter extends OncePerRequestFilter {
         //토큰
         String token = authorization;
 
-        //토큰 소멸 시간 검증
-        if (jwtUtil.isExpired(token)) {
+        log.info("token -> {}", token);
 
-            System.out.println("token expired");
+        //토큰 소멸 시간 검증
+        try {
+            if (jwtUtil.isExpired(token)) {
+
+                System.out.println("token expired");
+                filterChain.doFilter(request, response);
+
+                //조건이 해당되면 메소드 종료 (필수)
+                return;
+            }
+        } catch (ExpiredJwtException e) {
+            log.warn("error log -> ExpiredJwtException");
             filterChain.doFilter(request, response);
 
-            //조건이 해당되면 메소드 종료 (필수)
             return;
         }
 
+        System.out.println("token 만료 시간 안지남");
         //토큰에서 username과 role 획득
         String username = jwtUtil.getUsername(token);
         String role = jwtUtil.getRole(token);
