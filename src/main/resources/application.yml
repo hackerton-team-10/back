@@ -55,38 +55,12 @@ spring:
     activate:
       on-profile: local
 
-# maria DB로 대체
-#  datasource:
-#    driver-class-name: com.mysql.jdbc.Driver
-#    url: ${local-db.url}
-#    username: ENC(995yKJ+4XySjW/FqXijcsw==)
-#    password: ${local-db.pw}
-
----
-#Dev 프로필
-spring:
-  config:
-    activate:
-      on-profile: dev
-  # DB 설정
+ #maria DB로 변경
   datasource:
-    url: ${DB_HOST}?serverTimezone=UTC
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
-    hikari:
-      maximum-pool-size: 5
-  #JPA 설정
-  jpa:
-    hibernate:
-      ddl-auto: none
-    open-in-view: false
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
-        default_batch_fetch_size: 100
-
+    url: ${local-db.url}
+    username: ${local-db.username}
+    password: ${local-db.pw}
 
 ---
 #Prd 프로필
