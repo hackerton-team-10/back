@@ -70,3 +70,10 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+
+bootJar{
+    destinationDirectory = file("./target")
+    archivesBaseName = 'back'
+    archiveFileName = 'back.jar'
+    archiveVersion = "0.0.1"
+}
