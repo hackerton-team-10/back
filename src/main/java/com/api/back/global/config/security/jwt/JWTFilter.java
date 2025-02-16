@@ -9,6 +9,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -27,6 +28,7 @@ public class JWTFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
         FilterChain filterChain) throws ServletException, IOException {
+
 
         //cookie들을 불러온 뒤 Authorization Key에 담긴 쿠키를 찾음
         String authorization = null;
@@ -61,31 +63,43 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         //토큰
-        String token = authorization;
+        String accessToken = authorization;
 
-        log.info("token -> {}", token);
+        log.info("accessToken -> {}", accessToken);
 
-        //토큰 소멸 시간 검증
+        //토큰 만료 시간 검증
         try {
-            if (jwtUtil.isExpired(token)) {
-
-                System.out.println("token expired");
-                filterChain.doFilter(request, response);
-
-                //조건이 해당되면 메소드 종료 (필수)
-                return;
-            }
-        } catch (ExpiredJwtException e) {
+            jwtUtil.isExpired(accessToken);
+        }
+        catch (ExpiredJwtException e) {
             log.warn("error log -> ExpiredJwtException");
-            filterChain.doFilter(request, response);
 
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("access token expired");
+
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 
-        System.out.println("token 만료 시간 안지남");
+        // 토큰이 access인지 확인 (발급시 페이로드에 명시)
+        String category = jwtUtil.getCategory(accessToken);
+
+        if (!category.equals("access")) {
+
+            //response body
+            PrintWriter writer = response.getWriter();
+            writer.print("invalid access token");
+
+            //response status code
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            return;
+        }
+
         //토큰에서 username과 role 획득
-        String username = jwtUtil.getUsername(token);
-        String role = jwtUtil.getRole(token);
+        String username = jwtUtil.getUsername(accessToken);
+        String role = jwtUtil.getRole(accessToken);
 
         //userDTO를 생성하여 값 set
         MemberDto memberDto = MemberDto.builder()
