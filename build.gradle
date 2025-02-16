@@ -41,7 +41,10 @@ dependencies {
 
 
     //mysql driver
-    runtimeOnly 'com.mysql:mysql-connector-j'
+//    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    //maria driver
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     //h2 DB
     runtimeOnly 'com.h2database:h2'
