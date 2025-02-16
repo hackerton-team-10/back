@@ -34,7 +34,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        //Swagger Filter 제외
+        //Swagger, /v1/** Filter 제외
         return web -> {
             web.ignoring()
                 .requestMatchers(
@@ -43,7 +43,8 @@ public class SecurityConfig {
                     "/error",
                     "/swagger-ui/**",
                     "/swagger-resources/**",
-                    "/api-docs/**"
+                    "/api-docs/**",
+                    "/v1/**"
                 );
         };
     }
@@ -99,6 +100,7 @@ public class SecurityConfig {
         //경로별 인가
         http
             .authorizeHttpRequests((auth) -> auth
+//                .requestMatchers("/v1/**").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS

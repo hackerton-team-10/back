@@ -6,7 +6,6 @@ import com.api.back.global.config.security.dto.CustomOAuth2User;
 import com.api.back.global.config.security.dto.GoogleResponse;
 import com.api.back.global.config.security.dto.MemberDto;
 import com.api.back.global.config.security.dto.OAuth2Response;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;

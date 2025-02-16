@@ -1,9 +1,10 @@
 package com.api.back.global.common;
 
+import com.api.back.domain.member.dao.MemberRepository;
+import com.api.back.domain.member.domain.Member;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
 import com.api.back.global.config.security.jwt.JWTUtil;
-import com.api.back.global.error.exception.BusinessLogicException;
 import com.api.back.global.error.exception.ErrorCode;
 import com.api.back.global.error.exception.InvalidValueException;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -15,7 +16,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,9 +30,11 @@ import jakarta.servlet.http.Cookie;
 public class CommonController {
 
     private final JWTUtil jwtUtil;
+    private final MemberRepository memberRepository;
 
-    public CommonController(JWTUtil jwtUtil) {
+    public CommonController(JWTUtil jwtUtil, MemberRepository memberRepository) {
         this.jwtUtil = jwtUtil;
+        this.memberRepository = memberRepository;
     }
 
     @GetMapping("/health")
@@ -54,6 +56,9 @@ public class CommonController {
     }
 
     @PostMapping("/reissue")
+    @Operation(summary = "리프레시 토큰을 통한 액세스 토큰 재발급 엔드포인트", description = "헤더에 refreshToken 담아서 요청보내야 합니다.")
+    @ApiResponse(responseCode = "201", description = "Header로 액세스 토큰 발급", content = {@Content(mediaType = "application/json", schema = @Schema(type = "String"))})
+    @ApiResponse(responseCode = "400", description = "refreshToken missing 및 expired 시 응답", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = InvalidValueException.class))})
     public ResponseEntity<WrapResponse<?>> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         //get refresh token
@@ -91,15 +96,38 @@ public class CommonController {
             throw new InvalidValueException(ErrorCode.INVALID_REQUEST_PARAM);
         }
 
+        //DB에 저장되어 있는지 확인
+        Boolean isExist = memberRepository.existsByRefreshToken(refresh);
+        if (!isExist) {
+
+            //response body
+            throw new InvalidValueException(ErrorCode.REFRESHTOKEN_INVALID);
+        }
+
         String userName = jwtUtil.getUsername(refresh);
         String role = jwtUtil.getRole(refresh);
 
         //make new JWT
         String newAccess = jwtUtil.createJwt("access", userName, role, 600000L);
+//        String newRefresh = jwtUtil.createJwt("refresh", userName, role, 86400000L);
+
+        // TODO : RefreshToken Rotate 추가를 위한 DB 갱신 로직 작성
 
         //response
         response.setHeader("access", newAccess);
+//        response.addCookie(createCookie("refresh", newRefresh));
 
         return ResponseEntity.ok(WrapResponse.create("액세스 토큰 생성 완료", SuccessType.STATUS_201));
+    }
+
+    private Cookie createCookie(String key, String value) {
+
+        Cookie cookie = new Cookie(key, value);
+        cookie.setMaxAge(60*60*60);
+        //cookie.setSecure(true);   //https에 대해서만 허용할지 여부
+//        cookie.setPath("/");
+        cookie.setHttpOnly(true);
+
+        return cookie;
     }
 }

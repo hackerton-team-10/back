@@ -1,5 +1,7 @@
 package com.api.back.global.config.security.handler;
 
+import com.api.back.domain.member.dao.MemberRepository;
+import com.api.back.domain.member.domain.Member;
 import com.api.back.global.config.security.dto.CustomOAuth2User;
 import com.api.back.global.config.security.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
@@ -20,10 +22,12 @@ import org.springframework.stereotype.Component;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
+    private final MemberRepository memberRepository;
 
-    public CustomSuccessHandler(JWTUtil jwtUtil) {
+    public CustomSuccessHandler(JWTUtil jwtUtil, MemberRepository memberRepository) {
 
         this.jwtUtil = jwtUtil;
+        this.memberRepository = memberRepository;
     }
 
     @Override
@@ -33,7 +37,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
 
         String username = customUserDetails.getUserName();
-
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
         GrantedAuthority auth = iterator.next();
@@ -41,6 +44,14 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //토큰 생성
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+
+        Member member = memberRepository.findByGoogleId(customUserDetails.getAttribute("sub"));
+
+        if(member != null) {    //RefreshToken 저장
+            member.updateRefreshToken(refresh);
+            member.updateDate();
+            memberRepository.save(member);
+        }
 
         log.info("new refreshToken -> {}", refresh);
 

@@ -8,4 +8,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Member findByName(String userName);
 
     Member findByGoogleId(String googleId);
+
+    boolean existsByRefreshToken(String refreshToken);
 }

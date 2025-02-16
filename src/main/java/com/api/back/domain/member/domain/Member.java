@@ -36,7 +36,7 @@ public class Member {
     private String role;
 
     @Column(name = "refresh_token", unique = true)
-    private String refresh_token;
+    private String refreshToken;
 
     @Column(name = "created_at", nullable = false)
     @Builder.Default
@@ -51,5 +51,7 @@ public class Member {
     public void updateEmail(String email) {this.email = email;}
 
     public void updateDate() {this.updatedDate = LocalDateTime.now();}
+
+    public void updateRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}
 
 }
