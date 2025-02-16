@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,6 +30,22 @@ public class SecurityConfig {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.jwtUtil = jwtUtil;
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        //Swagger Filter 제외
+        return web -> {
+            web.ignoring()
+                .requestMatchers(
+                    "/h2-console/**",
+                    "favicon.ico",
+                    "/error",
+                    "/swagger-ui/**",
+                    "/swagger-resources/**",
+                    "/api-docs/**"
+                );
+        };
     }
 
     @Bean
@@ -67,6 +84,7 @@ public class SecurityConfig {
         http
             .httpBasic((auth) -> auth.disable());
 
+
         //JWTFilter 추가
         http
             .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
@@ -78,10 +96,9 @@ public class SecurityConfig {
                     .userService(customOAuth2UserService))
                 .successHandler(customSuccessHandler));
 
-        //경로별 인가 작업
+        //경로별 인가
         http
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/api/swagger-ui/swagger-ui/index.html", "/here-chat/", "/h2-console/", "/v3").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
