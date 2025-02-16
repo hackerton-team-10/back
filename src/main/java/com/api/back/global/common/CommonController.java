@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/open")
+@RequestMapping("/v1")
 @Tag(name = "Open API (no auth)")
 public class CommonController {
 
