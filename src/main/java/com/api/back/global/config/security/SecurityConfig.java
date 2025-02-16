@@ -43,8 +43,7 @@ public class SecurityConfig {
                     "/error",
                     "/swagger-ui/**",
                     "/swagger-resources/**",
-                    "/api-docs/**",
-                    "/v1/**"
+                    "/api-docs/**"
                 );
         };
     }
@@ -100,7 +99,7 @@ public class SecurityConfig {
         //경로별 인가
         http
             .authorizeHttpRequests((auth) -> auth
-//                .requestMatchers("/v1/**").permitAll()
+                .requestMatchers("/v1/**").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
