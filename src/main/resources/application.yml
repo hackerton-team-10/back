@@ -16,21 +16,28 @@ spring:
   profiles:
     active: local
     include: key
-
+  # DB 설정
+  datasource:
+    url: ${DB_HOST}?serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
   #JPA 설정
   jpa:
     hibernate:
       ddl-auto: create
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-      show-sql: true
-    # SQL 포매터
+    open-in-view: false
+    show-sql: true
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
     sql:
       init:
         mode: always
+
 
 #Swagger
 springdoc:
@@ -61,10 +68,47 @@ spring:
   config:
     activate:
       on-profile: dev
-
-#  데이터베이스 연동 필요
+  # DB 설정
   datasource:
-    url: ENC(cYdS1V7cLnCsn4wojCdiCQhyQd1J72zlLu6GIxQUYllj+Uwn5Mt+fIytyuJT17aRNmzhYhu1DvxIacJAexe9m5iydghLty0HgZZ/tS7JjCEmjP0f9qE2ow==)
-    username: ENC(KlpDcGHRN9vXvSjoKPZoXg==)
-    password: ENC(+BQknx5kOfehm8UGVEhMjka9oqRmRVta)
+    url: ${DB_HOST}?serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
     driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+  #JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+
+---
+#Prd 프로필
+spring:
+  config:
+    activate:
+      on-profile: prd
+  # DB 설정
+  datasource:
+    url: ${DB_HOST}?serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+  #JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
