@@ -4,6 +4,7 @@ import com.api.back.global.config.security.handler.CustomSuccessHandler;
 import com.api.back.global.config.security.jwt.JWTFilter;
 import com.api.back.global.config.security.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Collections;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +44,8 @@ public class SecurityConfig {
                     "/error",
                     "/swagger-ui/**",
                     "/swagger-resources/**",
-                    "/api-docs/**"
+                    "/api-docs/**",
+                    "/v1/**"
                 );
         };
     }
@@ -59,7 +61,12 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));    //Front url
+                    // 허용할 Origin 추가 (Swagger UI 및 클라이언트 주소)
+                    configuration.setAllowedOrigins(Arrays.asList(
+                        "http://localhost:3000", // 클라이언트 주소
+                        "http://localhost:8080",   // Swagger UI 주소
+                        "http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com:8080"  //EC2 도메인
+                    ));
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
@@ -71,6 +78,7 @@ public class SecurityConfig {
                     return configuration;
                 }
             }));
+
 
         //csrf disable
         http

@@ -55,23 +55,23 @@ public class CommonController {
     }
 
     @PostMapping("/reissue")
-    @Operation(summary = "리프레시 토큰을 통한 액세스 토큰 재발급 엔드포인트", description = "헤더에 refreshToken 담아서 요청보내야 합니다.")
+    @Operation(summary = "리프레시 토큰을 통한 액세스 토큰 재발급 엔드포인트", description = "쿠키에 refreshToken 담아서 요청보내야 합니다.")
     @ApiResponse(responseCode = "201", description = "Header로 액세스 토큰 발급", content = {@Content(mediaType = "application/json", schema = @Schema(type = "String"))})
     @ApiResponse(responseCode = "400", description = "refreshToken missing 및 expired 시 응답", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = InvalidValueException.class))})
     public ResponseEntity<WrapResponse<?>> reissue(HttpServletRequest request, HttpServletResponse response) {
 
         //get refresh token
-        String refresh = null;
+        String Authorization = null;
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
 
-            if (cookie.getName().equals("refresh")) {
+            if (cookie.getName().equals("Authorization")) {
 
-                refresh = cookie.getValue();
+                Authorization = cookie.getValue();
             }
         }
 
-        if (refresh == null) {
+        if (Authorization == null) {
 
             //response status code
             throw new InvalidValueException(ErrorCode.INVALID_REQUEST_PARAM);
@@ -79,7 +79,7 @@ public class CommonController {
 
         //expired check
         try {
-            jwtUtil.isExpired(refresh);
+            jwtUtil.isExpired(Authorization);
         } catch (ExpiredJwtException e) {
 
             //response status code
@@ -87,7 +87,7 @@ public class CommonController {
         }
 
         // 토큰이 refresh인지 확인 (발급시 페이로드에 명시)
-        String category = jwtUtil.getCategory(refresh);
+        String category = jwtUtil.getCategory(Authorization);
 
         if (!category.equals("refresh")) {
 
@@ -96,15 +96,15 @@ public class CommonController {
         }
 
         //DB에 저장되어 있는지 확인
-        Boolean isExist = memberRepository.existsByRefreshToken(refresh);
+        Boolean isExist = memberRepository.existsByRefreshToken(Authorization);
         if (!isExist) {
 
             //response body
             throw new InvalidValueException(ErrorCode.REFRESHTOKEN_INVALID);
         }
 
-        String userName = jwtUtil.getUsername(refresh);
-        String role = jwtUtil.getRole(refresh);
+        String userName = jwtUtil.getUsername(Authorization);
+        String role = jwtUtil.getRole(Authorization);
 
         //make new JWT
         String newAccess = jwtUtil.createJwt("access", userName, role, 600000L);
@@ -113,7 +113,7 @@ public class CommonController {
         // TODO : RefreshToken Rotate 추가를 위한 DB 갱신 로직 작성
 
         //response
-        response.setHeader("access", newAccess);
+        response.setHeader("Authorization", newAccess);
 //        response.addCookie(createCookie("refresh", newRefresh));
 
         return ResponseEntity.ok(WrapResponse.create("액세스 토큰 생성 완료", SuccessType.STATUS_201));

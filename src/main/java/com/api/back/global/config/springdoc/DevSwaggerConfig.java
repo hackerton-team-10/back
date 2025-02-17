@@ -12,13 +12,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Profile("prd")
+@Profile("dev")
 @Configuration
 @OpenAPIDefinition(
-    info = @Info(title = "blaybus API", version = "v1", description = "블레이버스 해커톤 운영 환경 API 문서"),
+    info = @Info(title = "blaybus API", version = "v1", description = "블레이버스 해커톤 개발 환경 API 문서"),
     security = @SecurityRequirement(name = "Authorization"),
     servers = {
-        @Server(url="https://playbus-hair-back-24bd2f0b794a.herokuapp.com/api", description = "Prd Environment Swagger")
+        @Server(url="http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com:8080/api", description = "Dev Environment Swagger")
     }
 )
 @SecurityScheme(
@@ -28,8 +28,7 @@ import org.springframework.context.annotation.Profile;
     bearerFormat = "JWT", // JWT 형식임을 명시
     description = "Bearer token authentication via cookies"
 )
-public class PrdSwaggerConfig {
-
+public class DevSwaggerConfig {
 
     @Bean
     public GroupedOpenApi publicApi() {

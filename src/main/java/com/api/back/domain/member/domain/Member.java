@@ -35,7 +35,7 @@ public class Member {
     @Column(name = "role", nullable = false, length = 10)
     private String role;
 
-    @Column(name = "refresh_token", unique = true)
+    @Column(name = "refresh_token", unique = false)
     private String refreshToken;
 
     @Column(name = "created_at", nullable = false)

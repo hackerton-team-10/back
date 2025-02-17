@@ -24,7 +24,7 @@ spring:
   #JPA 설정
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     open-in-view: false
     show-sql: true
     properties:
@@ -72,6 +72,10 @@ spring:
     username: ${local-db.username}
     password: ${local-db.pw}
 
+# 로그인 성공 시 URL
+redirect:
+  url: http://localhost:8080/api/member
+
 ---
 #Prd 프로필
 spring:
@@ -110,3 +114,49 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+
+# 로그인 성공 시 URL
+redirect:
+  url: http://hair-fe-smoky.vercel.app/home
+---
+# Dev
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  # Security Registration (Provider Skip)
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-name: google
+            client-id: ENC(0a2OroHBUVfWE6VktU1pC4ln7Q3gr7LkD/HA8b1LloPyGoalqpcbhINOvGFrQyQXOOwaLFHSiYubaO9eBH4spg9k4B1TILH0fEqT+FO+Iet7bnci+UDjyA==)
+            client-secret: ENC(ZXKqTbZknNGLctERRJdhGmaRhXR1CZ9L2zrMeq3IwbS8nEX4Nx4vMyKnjsD1vipn)
+            redirect-uri: http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com:8080/api/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+            scope: profile, email
+
+  # DB 설정
+  datasource:
+    url: ${DB_HOST}?serverTimezone=UTC
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.mariadb.jdbc.Driver
+    hikari:
+      maximum-pool-size: 5
+  #JPA 설정
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+# 로그인 성공 시 URL
+redirect:
+  url: http://localhost:5173/home

@@ -55,7 +55,6 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .email(oAuth2Response.getEmail())
                     .profile(oAuth2Response.getProfile())
                     .role("ROLE_USER")
-                    .refreshToken("temporary Refresh Token")   //한글 인코딩 오류있음.
                     .build());
 
             return new CustomOAuth2User(MemberDto.builder()
