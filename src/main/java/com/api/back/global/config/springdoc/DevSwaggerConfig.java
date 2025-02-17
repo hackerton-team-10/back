@@ -18,14 +18,14 @@ import org.springframework.context.annotation.Profile;
     info = @Info(title = "blaybus API", version = "v1", description = "블레이버스 해커톤 개발 환경 API 문서"),
     security = @SecurityRequirement(name = "Authorization"),
     servers = {
-        @Server(url="http://http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com:8080/api", description = "Dev Environment Swagger")
+        @Server(url="http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com:8080/api", description = "Dev Environment Swagger")
     }
 )
-@SecurityScheme(name = "Authorization",
-    type = SecuritySchemeType.HTTP,
-    scheme = "bearer",
-    bearerFormat = "JWT",
-    in = SecuritySchemeIn.HEADER)
+@SecurityScheme(
+    name = "Authorization",
+    type = SecuritySchemeType.APIKEY,
+    in = SecuritySchemeIn.HEADER
+)
 public class DevSwaggerConfig {
 
 

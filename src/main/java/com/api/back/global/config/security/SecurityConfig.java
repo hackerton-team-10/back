@@ -5,7 +5,6 @@ import com.api.back.global.config.security.jwt.JWTFilter;
 import com.api.back.global.config.security.jwt.JWTUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Collections;
-import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -61,7 +60,7 @@ public class SecurityConfig {
 
                     CorsConfiguration configuration = new CorsConfiguration();
 
-                    configuration.setAllowedOrigins(List.of("localhost:3000", "localhost:8080"));    //Front url
+                    configuration.addAllowedOriginPattern("*");    //Front url
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
