@@ -4,6 +4,10 @@ server:
   servlet:
     context-path: /api
 
+# 임시값
+encryptor:
+  key: blaybus
+
 # JWT
 spring:
   jwt:
