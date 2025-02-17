@@ -10,9 +10,10 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
 
         corsRegistry.addMapping("/**")
-            .allowedHeaders("Set-Cookie", "Authorization", "Content-Type", "X-Requested-With", "accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers")
-            .exposedHeaders("Authorization", "Set-Cookie")
-            .allowCredentials(true)
-            .allowedOrigins("*");  // 모든 출처에서 오는 요청을 허용
+            .allowedOrigins("*")
+            .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            .allowedHeaders("Authorization", "Content-Type")
+            .exposedHeaders("Set-Cookie")
+            .allowCredentials(true); // 쿠키 인증 요청 허용
     }
 }
