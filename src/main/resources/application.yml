@@ -11,23 +11,16 @@ spring:
       access: 3600000
       refresh: 1209600000
 
-#    secret: ENC(FZm2+cnNzBUJNDxOUQFnvLAXbbvCJtgr+kRiw4avSMhdYVmMOyqnQMJ1Xprtr2oslRDtdew6FNcEJschjZzcW9PQEPgufl1uJuga5slxY00=)
+    secret: 5pgPHgSG60zNed0BD1+gek7NuV7HZXZwqgO25KDzKzA=
 
   profiles:
     active: local
     include: key
-  # DB 설정
-  datasource:
-    url: ${DB_HOST}?serverTimezone=UTC
-    username: ${DB_USERNAME}
-    password: ${DB_PASSWORD}
-    driver-class-name: org.mariadb.jdbc.Driver
-    hikari:
-      maximum-pool-size: 5
+
   #JPA 설정
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     open-in-view: false
     show-sql: true
     properties:
@@ -55,6 +48,19 @@ spring:
     activate:
       on-profile: local
 
+  # Security Registration (Provider Skip)
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-name: google
+            client-id: ENC(0a2OroHBUVfWE6VktU1pC4ln7Q3gr7LkD/HA8b1LloPyGoalqpcbhINOvGFrQyQXOOwaLFHSiYubaO9eBH4spg9k4B1TILH0fEqT+FO+Iet7bnci+UDjyA==)
+            client-secret: ENC(ZXKqTbZknNGLctERRJdhGmaRhXR1CZ9L2zrMeq3IwbS8nEX4Nx4vMyKnjsD1vipn)
+            redirect-uri: http://localhost:8080/api/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+            scope: profile, email
+
  #maria DB로 변경
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
@@ -68,6 +74,20 @@ spring:
   config:
     activate:
       on-profile: prd
+
+  # Security Registration (Provider Skip)
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-name: google
+            client-id: ENC(HQSvFFzXQeP880FFAX/IDST0/+fpMQQuyVOtiidsrfS8K5ueEkNIYiaH8vsRWzMzZztsa1WG1IB3amUxwj/Hycmc7Ee4iYvd7oksMsS+cTHLL/dohAA6kg==)
+            client-secret: ENC(G/93j+b7lZjCnMC8XkiSzH/SjfBZddbqoV6l0OxvX/IV+GD6YvIGILdZQyzUXRqx)
+            redirect-uri: https://playbus-hair-back-24bd2f0b794a.herokuapp.com/api/login/oauth2/code/google
+            authorization-grant-type: authorization_code
+            scope: profile, email
+
   # DB 설정
   datasource:
     url: ${DB_HOST}?serverTimezone=UTC

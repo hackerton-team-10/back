@@ -23,7 +23,8 @@ public enum ErrorCode {
 
     // Member
     ACCESSTOKEN_EXPIRED(401,"엑세스 토큰이 만료되었습니다 재로그인이 필요합니다."),
-    REFRESHTOKEN_EXPIRED(400,"토큰이 만료되었습니다 재로그인이 필요합니다."),
+    REFRESHTOKEN_EXPIRED(400,"리프레시 토큰이 만료되었습니다 재로그인이 필요합니다."),
+    REFRESHTOKEN_INVALID(400,"리프레시 토큰이 잘못되었습니다 재로그인이 필요합니다."),
     TOKEN_NOT_FOUND(404,"토큰을 찾을 수 없습니다."), //redis속 refresh토큰이 없을때
     TOKEN_CREATE_FAILED(432,"토큰 생성 실패했습니다."), //access 토큰재발급에 실패했을때
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
