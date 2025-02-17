@@ -25,6 +25,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Value("${redirect.url}")
     String redirectUrl;
 
+    @Value("${redirect.onboarding.url}")
+    String onboardingUrl;
+
     private final JWTUtil jwtUtil;
     private final MemberRepository memberRepository;
 
@@ -48,23 +51,42 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         //토큰 생성
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
+        log.info("new refreshToken -> {}", refresh);
 
         Member member = memberRepository.findByGoogleId(customUserDetails.getUserName());
 
-        log.info("현재 로그인 providerId -> {}", customUserDetails.getUserName());
-
-        if(member != null) {    //RefreshToken 저장
-            member.updateRefreshToken(refresh);
-            member.updateDate();
-            memberRepository.save(member);
-        }
-
-        log.info("new refreshToken -> {}", refresh);
 
         response.addCookie(createCookie("Authorization", refresh));
 
-        log.info("redirect url -> {}", redirectUrl);
-        response.sendRedirect(redirectUrl);
+        if(member != null) {    //RefreshToken 저장
+
+            log.info("현재 로그인 유저 -> {}", customUserDetails.getUserName());
+
+            member.updateEmail(customUserDetails.getEmail());
+            member.updateName(customUserDetails.getName());
+            member.updateRefreshToken(refresh);
+            member.updateDate();
+            memberRepository.save(member);
+
+            log.info("redirect url -> {}", redirectUrl);
+            response.sendRedirect(redirectUrl);
+        }
+        else {  //첫 로그인일 경우
+            log.info("첫 로그인 유저 -> {}", customUserDetails.getUserName());
+
+            memberRepository.save(Member.builder()
+                .googleId(customUserDetails.getUserName())
+                .name(customUserDetails.getName())
+                .email(customUserDetails.getEmail())
+                .profile(customUserDetails.getProfile())
+                .role("ROLE_USER")
+                .refreshToken(refresh)
+                .build());
+
+            log.info("redirect url -> {}", onboardingUrl);
+            response.sendRedirect(onboardingUrl);
+        }
+
     }
 
     private Cookie createCookie(String key, String value) {
