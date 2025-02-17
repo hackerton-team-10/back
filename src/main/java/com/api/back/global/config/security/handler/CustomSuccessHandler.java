@@ -1,6 +1,6 @@
 package com.api.back.global.config.security.handler;
 
-import com.api.back.domain.member.dao.MemberRepository;
+import com.api.back.domain.member.repository.MemberRepository;
 import com.api.back.domain.member.domain.Member;
 import com.api.back.global.config.security.dto.CustomOAuth2User;
 import com.api.back.global.config.security.jwt.JWTUtil;

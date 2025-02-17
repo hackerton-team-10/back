@@ -1,7 +1,7 @@
 package com.api.back.domain.reservation.entity;
 
 import com.api.back.domain.designer.dto.response.DesignerInfo;
-import com.api.back.domain.member.entity.Member;
+import com.api.back.domain.member.domain.Member;
 import com.api.back.domain.payment.entity.Payment;
 import com.api.back.domain.reservation.dto.response.PaymentInfo;
 import com.api.back.domain.reservation.dto.response.ReservationResponse;

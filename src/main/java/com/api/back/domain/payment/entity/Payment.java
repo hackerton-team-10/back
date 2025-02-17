@@ -1,9 +1,8 @@
 package com.api.back.domain.payment.entity;
 
-import com.api.back.domain.member.entity.Member;
+import com.api.back.domain.member.domain.Member;
 import com.api.back.domain.reservation.dto.response.PaymentInfo;
 import com.api.back.global.common.BaseEntity;
-import com.api.back.domain.reservation.entity.Reservation;
 import com.api.back.domain.payment.type.PaymentMethod;
 import com.api.back.domain.payment.type.PaymentStatus;
 import jakarta.annotation.Nullable;
