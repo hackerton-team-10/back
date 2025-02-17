@@ -72,6 +72,10 @@ spring:
     username: ${local-db.username}
     password: ${local-db.pw}
 
+# 로그인 성공 시 URL
+redirect:
+  url: http://localhost:8080/api/member
+
 ---
 #Prd 프로필
 spring:
@@ -111,6 +115,9 @@ spring:
         format_sql: true
         default_batch_fetch_size: 100
 
+# 로그인 성공 시 URL
+redirect:
+  url: http://hair-fe-smoky.vercel.app/home
 ---
 # Dev
 spring:
@@ -149,3 +156,7 @@ spring:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
+
+# 로그인 성공 시 URL
+redirect:
+  url: http://localhost:5173/home

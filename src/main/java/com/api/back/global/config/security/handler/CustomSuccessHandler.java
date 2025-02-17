@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
@@ -21,6 +21,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+
+    @Value("${redirect.url}")
+    String redirectUrl;
 
     private final JWTUtil jwtUtil;
     private final MemberRepository memberRepository;
@@ -59,7 +62,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         log.info("new refreshToken -> {}", refresh);
 
         response.addCookie(createCookie("Authorization", refresh));
-        response.sendRedirect("http://hair-fe-smoky.vercel.app");
+
+        log.info("redirect url -> {}", redirectUrl);
+        response.sendRedirect(redirectUrl);
     }
 
     private Cookie createCookie(String key, String value) {
