@@ -24,7 +24,9 @@ import org.springframework.context.annotation.Profile;
 @SecurityScheme(
     name = "Authorization",
     type = SecuritySchemeType.APIKEY,
-    in = SecuritySchemeIn.COOKIE
+    in = SecuritySchemeIn.COOKIE,
+    bearerFormat = "JWT", // JWT 형식임을 명시
+    description = "Bearer token authentication via cookies"
 )
 public class PrdSwaggerConfig {
 
