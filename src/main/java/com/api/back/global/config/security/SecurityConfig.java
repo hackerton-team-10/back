@@ -43,7 +43,8 @@ public class SecurityConfig {
                     "/error",
                     "/swagger-ui/**",
                     "/swagger-resources/**",
-                    "/api-docs/**"
+                    "/api-docs/**",
+                    "/v1/**"
                 );
         };
     }
