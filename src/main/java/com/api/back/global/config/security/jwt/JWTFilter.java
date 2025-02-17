@@ -78,6 +78,8 @@ public class JWTFilter extends OncePerRequestFilter {
         // 토큰이 access인지 확인 (발급시 페이로드에 명시)
         String category = jwtUtil.getCategory(accessToken);
 
+        log.info("쿠키 카테고리 -> {}", category);
+
         if (!category.equals("access")) {
 
             //response body
@@ -99,6 +101,7 @@ public class JWTFilter extends OncePerRequestFilter {
             .role(role)
             .build();
 
+        log.info("유저 정보 세션 등록 -> " + username);
 
         //UserDetails에 회원 정보 객체 담기
         CustomOAuth2User customOAuth2User = new CustomOAuth2User(memberDto);

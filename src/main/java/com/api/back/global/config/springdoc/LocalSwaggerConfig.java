@@ -19,16 +19,18 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @OpenAPIDefinition(
     info = @Info(title = "blaybus API", version = "v1", description = "블레이버스 해커톤 로컬 API 문서"),
-//    security = @SecurityRequirement(name = "Authorization"),
+    security = @SecurityRequirement(name = "Authorization"),
     servers = {
         @Server(url="http://localhost:8080/api", description = "Local Swagger")
     }
 )
-//@SecurityScheme(name = "Authorization",
-//    type = SecuritySchemeType.HTTP,
-//    scheme = "bearer",
-//    bearerFormat = "JWT",
-//    in = SecuritySchemeIn.HEADER)
+@SecurityScheme(
+    name = "Authorization",
+    type = SecuritySchemeType.APIKEY,
+    in = SecuritySchemeIn.COOKIE,
+    bearerFormat = "JWT", // JWT 형식임을 명시
+    description = "Bearer token authentication via cookies"
+)
 public class LocalSwaggerConfig {
 
     @Bean
