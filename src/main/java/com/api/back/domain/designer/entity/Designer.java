@@ -1,5 +1,6 @@
 package com.api.back.domain.designer.entity;
 
+import com.api.back.domain.designer.dto.response.DesignerInfo;
 import com.api.back.domain.designer.dto.response.DesignerResponse;
 import com.api.back.global.common.BaseEntity;
 import com.api.back.domain.reservation.type.ConsultationType;
@@ -57,6 +58,14 @@ public class Designer extends BaseEntity {
                 .specialty(this.getSpecialty())
                 .consultingFeeVideo(this.getConsultingFeeVideo())
                 .consultingFeeInPerson(this.getConsultingFeeInPerson())
+                .location(this.getLocation())
+                .build();
+    }
+    public DesignerInfo createDesignerInfo() {
+        return DesignerInfo.builder()
+                .designerId(this.getId())
+                .designerName(this.getName())
+                .specialty(this.getSpecialty())
                 .location(this.getLocation())
                 .build();
     }
