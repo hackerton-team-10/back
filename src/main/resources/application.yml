@@ -74,9 +74,9 @@ spring:
 
 # 로그인 성공 시 URL
 redirect:
-  url: http://localhost:8080/api/member
+  url: http://hair-fe-smoky.vercel.app/home
   onboarding:
-    url: http://localhost:8080/api/member
+    url: http://hair-fe-smoky.vercel.app/home
 
 ---
 #Prd 프로필

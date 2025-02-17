@@ -1,17 +1,18 @@
 package com.api.back.domain.member.api;
 
-import com.api.back.domain.member.dto.response.MemberResponse;
+import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
+import com.api.back.global.config.security.dto.CustomOAuth2User;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.Optional;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Swagger 문서 작업을 위한 추상 인터페이스
@@ -20,10 +21,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @Tag(name ="유저 API ", description = "유저 API")
 public interface MemberApiDocs {
 
-    @Operation(summary = "Init 엔드포인트",description = "프로젝트 세팅용 엔드포인트입니다.")
-    @Parameter(name = "memberId", required = false, description = "찾을 유저의 ID값")
-    @ApiResponse(responseCode = "200", description = "MemberResponse", content = @Content(schema = @Schema(implementation = MemberResponse.class)))
-    @GetMapping({"/{memberId}", "/"})
-    public ResponseEntity<WrapResponse<MemberResponse>> memberP(
-        @PathVariable(value = "memberId", required = false) Optional<Long> id);
+    @Operation(summary = "사용자 이름 변경 메서드",description = "첫 로그인 시 유저이름 변경 메서드")
+    @ApiResponse(responseCode = "204", description = "반환되는 값은 없습니다.", content = @Content(schema = @Schema(implementation = SuccessType.class)))
+    @Parameter(name = "userName", description = "변경할 유저 이름")
+    @PatchMapping("/")
+    public ResponseEntity<WrapResponse<SuccessType>> memberP(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, @RequestParam("userName") String userName);
 }

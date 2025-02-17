@@ -1,26 +1,36 @@
 package com.api.back.domain.member.application;
 
+import static org.springframework.data.jpa.domain.AbstractPersistable_.id;
+
+import com.api.back.domain.member.domain.Member;
 import com.api.back.domain.member.dto.response.MemberResponse;
 import com.api.back.domain.member.exception.MemberNotFoundException;
+import com.api.back.domain.member.repository.MemberRepository;
+import com.api.back.global.error.exception.BusinessLogicException;
+import com.api.back.global.error.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService{
 
+    private final MemberRepository memberRepository;
+
+    public MemberServiceImpl(MemberRepository memberRepository) {
+        this.memberRepository = memberRepository;
+    }
+
     @Override
-    public MemberResponse getMember(Long id) {
+    public void updateUserName(String googleId, String userName) {
 
-        if(id == null) {
-            throw new MemberNotFoundException();
-        }
+        Member member = memberRepository.findByGoogleId(googleId)
+            .orElseThrow(() -> new BusinessLogicException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return MemberResponse.builder()
-            .id(1L)
-            .userName("testMember")
-            .build();
+        member.updateName(userName);
+
+        memberRepository.save(member);
+
     }
 }
