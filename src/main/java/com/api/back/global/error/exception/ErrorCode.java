@@ -30,6 +30,14 @@ public enum ErrorCode {
     MEMBER_NOT_FOUND(404, "존재하지 않는 회원입니다."),
     MEMBER_NOT_POSSESSION(404, "보유하고 있지않은 아이콘입니다."),
     MEMBER_ALREADY_ICON(400, "변경하려는 아이콘이 현재 아이콘과 동일한 아이콘입니다."),
+
+    // Designer
+    DESIGNER_NOT_FOUND(404, "존재하지 않는 디자이너입니다."),
+
+    // Reservation
+    RESERVATION_NOT_FOUND(404, "존재하지 않는 예약입니다."),
+    RESERVATION_NOT_AVAILABLE(400, "현재 예약할 수 없는 상태입니다.")
+
     ;
 
     private final int status;
