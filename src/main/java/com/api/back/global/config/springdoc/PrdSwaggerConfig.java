@@ -21,11 +21,11 @@ import org.springframework.context.annotation.Profile;
         @Server(url="https://playbus-hair-back-24bd2f0b794a.herokuapp.com/api", description = "Prd Environment Swagger")
     }
 )
-@SecurityScheme(name = "Authorization",
-    type = SecuritySchemeType.HTTP,
-    scheme = "bearer",
-    bearerFormat = "JWT",
-    in = SecuritySchemeIn.HEADER)
+@SecurityScheme(
+    name = "Authorization",
+    type = SecuritySchemeType.APIKEY,
+    in = SecuritySchemeIn.COOKIE
+)
 public class PrdSwaggerConfig {
 
 

@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Profile;
 @SecurityScheme(
     name = "Authorization",
     type = SecuritySchemeType.APIKEY,
-    in = SecuritySchemeIn.HEADER
+    in = SecuritySchemeIn.COOKIE
 )
 public class DevSwaggerConfig {
 
