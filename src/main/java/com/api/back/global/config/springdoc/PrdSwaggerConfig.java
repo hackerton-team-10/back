@@ -12,21 +12,21 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-@Profile("dev")
+@Profile("prd")
 @Configuration
 @OpenAPIDefinition(
-    info = @Info(title = "blaybus API", version = "v1", description = "블레이버스 해커톤 개발 환경 API 문서"),
-//    security = @SecurityRequirement(name = "Authorization"),
+    info = @Info(title = "blaybus API", version = "v1", description = "블레이버스 해커톤 운영 환경 API 문서"),
+    security = @SecurityRequirement(name = "Authorization"),
     servers = {
-        @Server(url="http://localhost:8080/api", description = "Dev Environment Swagger")
+        @Server(url="https://playbus-hair-back-24bd2f0b794a.herokuapp.com/api", description = "Dev Environment Swagger")
     }
 )
-//@SecurityScheme(name = "Authorization",
-//    type = SecuritySchemeType.HTTP,
-//    scheme = "bearer",
-//    bearerFormat = "JWT",
-//    in = SecuritySchemeIn.HEADER)
-public class DevSwaggerConfig {
+@SecurityScheme(name = "Authorization",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT",
+    in = SecuritySchemeIn.HEADER)
+public class PrdSwaggerConfig {
 
 
     @Bean

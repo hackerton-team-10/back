@@ -4,7 +4,7 @@ import com.api.back.domain.designer.dto.response.DesignerInfo;
 import com.api.back.domain.designer.entity.Designer;
 import com.api.back.domain.designer.exception.DesignerNotFoundException;
 import com.api.back.domain.designer.repository.DesignerRepository;
-import com.api.back.domain.member.entity.Member;
+import com.api.back.domain.member.domain.Member;
 import com.api.back.domain.member.exception.MemberNotFoundException;
 import com.api.back.domain.member.repository.MemberRepository;
 import com.api.back.domain.payment.entity.Payment;

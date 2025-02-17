@@ -1,7 +1,6 @@
 package com.api.back.global.common;
 
-import com.api.back.domain.member.dao.MemberRepository;
-import com.api.back.domain.member.domain.Member;
+import com.api.back.domain.member.repository.MemberRepository;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
 import com.api.back.global.config.security.jwt.JWTUtil;
