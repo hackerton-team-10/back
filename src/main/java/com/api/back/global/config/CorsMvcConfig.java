@@ -10,7 +10,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
 
         corsRegistry.addMapping("/**")
-            .allowedOriginPatterns("http://localhost:*")
+            .allowedOrigins("http://localhost:8080", "http://localhost:3000")  // 여러 포트 허용
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("Authorization", "Content-Type")
             .exposedHeaders("Set-Cookie")
