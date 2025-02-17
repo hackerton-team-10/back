@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -45,7 +46,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //토큰 생성
         String refresh = jwtUtil.createJwt("refresh", username, role, 86400000L);
 
-        Member member = memberRepository.findByGoogleId(customUserDetails.getAttribute("sub"));
+        Member member = memberRepository.findByGoogleId(customUserDetails.getUserName());
+
+        log.info("현재 로그인 providerId -> {}", customUserDetails.getUserName());
 
         if(member != null) {    //RefreshToken 저장
             member.updateRefreshToken(refresh);

@@ -61,6 +61,7 @@ public class SecurityConfig {
                     CorsConfiguration configuration = new CorsConfiguration();
 
                     configuration.addAllowedOriginPattern("*");    //Front url
+                    configuration.addAllowedOriginPattern("http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com"); // Swagger에서 요청을 받을 서버 도메인
                     configuration.setAllowedMethods(Collections.singletonList("*"));
                     configuration.setAllowCredentials(true);
                     configuration.setAllowedHeaders(Collections.singletonList("*"));
