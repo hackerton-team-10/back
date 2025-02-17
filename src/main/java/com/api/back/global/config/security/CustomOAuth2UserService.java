@@ -45,44 +45,14 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         //리소스 서버에서 발급 받은 정보로 사용자를 특정할 아이디값을 만듬
         String googleId = oAuth2Response.getProviderId();
 
-        Member member = memberRepository.findByGoogleId(googleId);
 
-        if(member == null) {
-
-            memberRepository.save(Member.builder()
-                    .googleId(googleId)
-                    .name(oAuth2Response.getName())
-                    .email(oAuth2Response.getEmail())
-                    .profile(oAuth2Response.getProfile())
-                    .role("ROLE_USER")
-                    .build());
-
-            return new CustomOAuth2User(MemberDto.builder()
-                .username(googleId)
-                .name(oAuth2Response.getName())
-                .role("ROLE_USER")
-                .build());
-        }
-        else {
-
-            if (!member.getEmail().equals(oAuth2Response.getEmail()) ||
-                !member.getName().equals(oAuth2Response.getName())) {
-
-                // email 또는 name이 변경된 경우에만 update
-                member.updateEmail(oAuth2Response.getEmail());
-                member.updateName(oAuth2Response.getName());
-                member.updateDate();
-
-                memberRepository.save(member);
-            }
-
-            return new CustomOAuth2User(MemberDto.builder()
-                .username(googleId)
-                .name(oAuth2Response.getName())
-                .role("ROLE_USER")
-                .build());
-
-        }
+        return new CustomOAuth2User(MemberDto.builder()
+            .username(googleId)
+            .name(oAuth2Response.getName())
+            .role("ROLE_USER")
+            .email(oAuth2Response.getEmail())
+            .profile(oAuth2Response.getProfile())
+            .build());
 
     }
 }
