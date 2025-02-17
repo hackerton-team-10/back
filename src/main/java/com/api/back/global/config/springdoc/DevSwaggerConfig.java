@@ -21,13 +21,11 @@ import org.springframework.context.annotation.Profile;
         @Server(url="http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com:8080/api", description = "Dev Environment Swagger")
     }
 )
-@SecurityScheme(
-    name = "Authorization",
-    type = SecuritySchemeType.APIKEY,
-    in = SecuritySchemeIn.COOKIE,
-    bearerFormat = "JWT", // JWT 형식임을 명시
-    description = "Bearer token authentication via cookies"
-)
+@SecurityScheme(name = "Authorization",
+    type = SecuritySchemeType.HTTP,
+    scheme = "bearer",
+    bearerFormat = "JWT",
+    in = SecuritySchemeIn.HEADER)
 public class DevSwaggerConfig {
 
     @Bean

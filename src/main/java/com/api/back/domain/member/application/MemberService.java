@@ -4,5 +4,5 @@ import com.api.back.domain.member.dto.response.MemberResponse;
 
 public interface MemberService {
 
-    MemberResponse getMember(Long id);
+    void updateUserName(String googleId, String userName);
 }

@@ -1,5 +1,6 @@
 package com.api.back.domain.member.domain;
 
+import com.api.back.global.common.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AccessLevel;
@@ -16,7 +17,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class Member {
+public class Member extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -35,22 +36,13 @@ public class Member {
     @Column(name = "role", nullable = false, length = 10)
     private String role;
 
-    @Column(name = "refresh_token", unique = false)
+    @Column(name = "refresh_token", unique = false, length = 500)
     private String refreshToken;
 
-    @Column(name = "created_at", nullable = false)
-    @Builder.Default
-    private LocalDateTime createdDate = LocalDateTime.now();
-
-    @Column(name = "updated_at", nullable = false)
-    @Builder.Default
-    private LocalDateTime updatedDate = LocalDateTime.now();
 
     public void updateName(String name) {this.name = name;}
 
     public void updateEmail(String email) {this.email = email;}
-
-    public void updateDate() {this.updatedDate = LocalDateTime.now();}
 
     public void updateRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}
 

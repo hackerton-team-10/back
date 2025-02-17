@@ -1,16 +1,16 @@
 package com.api.back.domain.member.api;
 
 import com.api.back.domain.member.application.MemberService;
-import com.api.back.domain.member.dto.response.MemberResponse;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
-import java.util.Optional;
+import com.api.back.global.config.security.dto.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
@@ -22,14 +22,15 @@ public class MemberApi implements MemberApiDocs{
     private final MemberService memberService;
 
     /**
-     * Init용 엔드포인트입니다.
+     * 사용자 이름 변경 엔드포인트
      * **/
-    @GetMapping({"/{memberId}", "/"}) // memberId가 없어도 호출 가능
-    public ResponseEntity<WrapResponse<MemberResponse>> memberP(
-        @PathVariable(value = "memberId", required = false) Optional<Long> id) {
+    @PatchMapping()
+    public ResponseEntity<WrapResponse<SuccessType>> memberP(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, @RequestParam("userName") String userName) {
 
-        MemberResponse response = memberService.getMember(id.orElse(null));
+        log.info(customOAuth2User.getUserName());
 
-        return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
+        memberService.updateUserName(customOAuth2User.getUserName(), userName);
+
+        return ResponseEntity.ok(WrapResponse.create(SuccessType.SIMPLE_STATUS));
     }
 }
