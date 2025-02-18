@@ -45,9 +45,9 @@ public class CommonController {
 
     @GetMapping("/dev/token")
     @Operation(summary = "개발용 토큰 발급 엔드포인트", description = "개발용 3시간 AccessToken 발급")
-    @Parameter(name = "name", required = true, description = "사용자 이름")
+    @Parameter(name = "name", required = true, description = "사용자 ID : 1번으로 설정해주시면 될 것 같습니다.")
     @ApiResponse(responseCode = "201", description = "Success", content = {@Content(mediaType = "application/json", schema = @Schema(type = "String"))})
-    public ResponseEntity<WrapResponse<String>> getDevToken(@RequestParam("name") String name) {
+    public ResponseEntity<WrapResponse<String>> getDevToken(@RequestParam("name") Long name) {
 
         String response = jwtUtil.createJwt("access", name, "ROLE_USER", 1000 * 60 * 60 * 3L);
 
@@ -103,11 +103,11 @@ public class CommonController {
             throw new InvalidValueException(ErrorCode.REFRESHTOKEN_INVALID);
         }
 
-        String userName = jwtUtil.getUsername(Authorization);
+        Long userName = jwtUtil.getUsername(Authorization);
         String role = jwtUtil.getRole(Authorization);
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", userName, role, 600000L);
+        String newAccess = jwtUtil.createJwt("access", jwtUtil.getUsername(Authorization), role, 600000L);
 //        String newRefresh = jwtUtil.createJwt("refresh", userName, role, 86400000L);
 
         // TODO : RefreshToken Rotate 추가를 위한 DB 갱신 로직 작성

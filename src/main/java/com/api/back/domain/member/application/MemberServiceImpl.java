@@ -23,9 +23,9 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public void updateUserName(String googleId, String userName) {
+    public void updateUserName(Long userId, String userName) {
 
-        Member member = memberRepository.findByGoogleId(googleId)
+        Member member = memberRepository.findById(userId)
             .orElseThrow(() -> new BusinessLogicException(ErrorCode.MEMBER_NOT_FOUND));
 
         member.updateName(userName);

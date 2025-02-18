@@ -42,7 +42,7 @@ public class CustomOAuth2User implements OAuth2User {
         return collection;
     }
 
-    public String getUserName() {
+    public Long getUserName() {
         return memberDto.getUsername();
     }
 
@@ -54,5 +54,7 @@ public class CustomOAuth2User implements OAuth2User {
     public String getEmail() {return memberDto.getEmail();}
 
     public String getProfile() {return memberDto.getProfile();}
+
+    public String getGoogleId() {return memberDto.getGoogleId();}
 
 }

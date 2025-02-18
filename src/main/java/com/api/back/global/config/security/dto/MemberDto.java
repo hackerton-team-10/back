@@ -13,7 +13,8 @@ public class MemberDto {
 
     private String role;
     private String name;
-    private String username;
+    private Long username;
+    private String googleId;
     private String email;
     private String profile;
 }
