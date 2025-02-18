@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import jakarta.servlet.http.Cookie;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1")
 @Tag(name = "Open API (no auth)")
@@ -76,6 +78,8 @@ public class CommonController {
                 Authorization = cookie.getValue();
             }
         }
+
+        log.info("reissue Controller Call! -> {}", Authorization);
 
         if (Authorization == null) {
 
@@ -130,7 +134,7 @@ public class CommonController {
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60*60*60);
         //cookie.setSecure(true);   //https에 대해서만 허용할지 여부
-//        cookie.setPath("/");
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
 
         return cookie;
