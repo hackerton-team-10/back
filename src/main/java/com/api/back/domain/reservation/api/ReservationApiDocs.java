@@ -3,6 +3,7 @@ package com.api.back.domain.reservation.api;
 import com.api.back.domain.payment.type.PaymentMethod;
 import com.api.back.domain.reservation.dto.response.ReservationResponse;
 import com.api.back.domain.reservation.type.ConsultationType;
+import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.common.response.WrapResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -19,7 +20,10 @@ import java.util.List;
 public interface ReservationApiDocs {
     @Operation(summary = "예약 리스트 조회")
     @GetMapping({""})
-    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList();
+    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList(
+            @RequestParam
+            ReservationStatusRequest status
+    );
 
     @Operation(summary = "예약 조회")
     @GetMapping({"/{reservationId}"})

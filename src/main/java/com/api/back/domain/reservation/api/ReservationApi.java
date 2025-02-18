@@ -4,6 +4,7 @@ import com.api.back.domain.payment.type.PaymentMethod;
 import com.api.back.domain.reservation.application.ReservationService;
 import com.api.back.domain.reservation.dto.response.ReservationResponse;
 import com.api.back.domain.reservation.type.ConsultationType;
+import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +27,8 @@ public class ReservationApi implements ReservationApiDocs {
 
     @Override
     @GetMapping({""})
-    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList() {
-        List<ReservationResponse> response = reservationService.getReservationList();
+    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList(ReservationStatusRequest status) {
+        List<ReservationResponse> response = reservationService.getReservationList(status);
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 
