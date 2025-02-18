@@ -42,6 +42,14 @@ public class DesignerServiceImpl implements DesignerService {
     public DesignerTimesResponse getDesignerTimes(Long designerId, LocalDate date) {
         List<Reservation> reservationList = reservationRepository.findAllByDesignerIdAndDateWithoutCancelled(designerId, date);
 
+        // 전 날짜 조회시 가능한 시간대 없음
+        if(date.isBefore(LocalDateTime.now().toLocalDate())){
+            return DesignerTimesResponse.builder()
+                    .designerId(designerId)
+                    .times(new ArrayList<>())
+                    .build();
+        }
+
         // 오전 10 ~ 오후 8시까지 예약 가능하다고 가정
         LocalTime endTime = LocalTime.of(20, 0);
         LocalTime now = LocalTime.now();
