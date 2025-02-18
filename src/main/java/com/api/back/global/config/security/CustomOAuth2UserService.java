@@ -29,9 +29,12 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         log.info("loadUser Method Call");
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
-        System.out.println(oAuth2User);
+        log.info("oAuth2User -> {}", oAuth2User);
 
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
+
+        log.info("registration id -> {}", registrationId);
+
         OAuth2Response oAuth2Response = null;
         if (registrationId.equals("google")) {
 
