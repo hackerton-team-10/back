@@ -78,6 +78,22 @@ redirect:
   onboarding:
     url: http://hair-fe-smoky.vercel.app/home
 
+# KaKaoPay
+kakao:
+  ready:
+    url: https://open-api.kakaopay.com/online/v1/payment/ready
+  approve:
+    url: https://open-api.kakaopay.com/online/v1/payment/approve
+  pay-cancel:
+    url: https://open-api.kakaopay.com/online/v1/payment/cancel
+  approval:
+    url: http://localhost:8080/api/payment/callback # 프론트로 전환
+  cancel:
+    url: https://infinitecode.tistory.com
+  fail:
+    url: https://infinitecode.tistory.com
+  secret:
+    key: SECRET_KEY DEVD64D469E9C74110DE594208471D2218F20C42
 ---
 #Prd 프로필
 spring:
@@ -122,6 +138,22 @@ redirect:
   url: http://hair-fe-smoky.vercel.app/home
   onboarding:
     url: http://hair-fe-smoky.vercel.app/home
+
+# KaKaoPay
+kakao:
+  ready:
+    url: https://open-api.kakaopay.com/online/v1/payment/ready
+  approve:
+    url: https://open-api.kakaopay.com/online/v1/payment/approve
+  approval:
+    url: http://localhost:8080/api/payment/callback # 프론트로 전환
+  cancel:
+    url: https://infinitecode.tistory.com
+  fail:
+    url: https://infinitecode.tistory.com
+  secret:
+    key: SECRET_KEY DEVD64D469E9C74110DE594208471D2218F20C42
+
 ---
 # Dev
 spring:
@@ -166,3 +198,18 @@ redirect:
   url: http://localhost:5173/home
   onboarding:
     url: http://localhost:5173/home
+
+# KaKaoPay
+kakao:
+  ready:
+    url: https://open-api.kakaopay.com/online/v1/payment/ready
+  approve:
+    url: https://open-api.kakaopay.com/online/v1/payment/approve
+  approval:
+    url: http://localhost:8080/api/payment/callback # 프론트로 전환
+  cancel:
+    url: https://infinitecode.tistory.com
+  fail:
+    url: https://infinitecode.tistory.com
+  secret:
+    key: SECRET_KEY DEVD64D469E9C74110DE594208471D2218F20C42

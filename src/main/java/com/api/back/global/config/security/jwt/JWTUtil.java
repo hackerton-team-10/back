@@ -24,9 +24,14 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("category", String.class);
     }
 
-    public String getUsername(String token) {
+    public Long getUsername(String token) {
 
-        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("username", String.class);
+        return Jwts.parser()
+            .setSigningKey(secretKey)  // 서명 검증을 위한 키 설정
+            .build()
+            .parseClaimsJws(token)   // JWT 파싱
+            .getBody()
+            .get("username", Long.class);  // Long 타입으로 클레임 읽기
     }
 
     public String getRole(String token) {
@@ -39,7 +44,7 @@ public class JWTUtil {
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration().before(new Date());
     }
 
-    public String createJwt(String category, String username, String role, Long expiredMs) {
+    public String createJwt(String category, Long username, String role, Long expiredMs) {
 
         return Jwts.builder()
             .claim("category", category)

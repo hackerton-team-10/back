@@ -7,6 +7,7 @@ import com.api.back.domain.payment.type.PaymentMethod;
 import com.api.back.domain.payment.type.PaymentStatus;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
+import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,11 +21,10 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Payment extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private UUID id;
 
     @Nullable // 카카오페이로 결제할 때만 해당 값 필요
-    private Long paymentId;
+    private String paymentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
