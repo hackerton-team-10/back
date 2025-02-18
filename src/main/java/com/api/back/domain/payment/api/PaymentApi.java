@@ -75,7 +75,10 @@ public class PaymentApi implements PaymentApiDocs{
 
         UUID orderId = UUID.randomUUID();
 
-        approvalUrl += "?orderId=" + orderId;
+        StringBuffer sb = new StringBuffer();
+        sb.append(approvalUrl).append("?orderId=").append(orderId);
+
+        log.info("approvalUrl -> {}", sb.toString());
 
         RequestPayReadyContent request = RequestPayReadyContent.builder()
             .partner_order_id(orderId)
@@ -84,7 +87,7 @@ public class PaymentApi implements PaymentApiDocs{
             .quantity(1)
             .total_amount(totalAmount)
             .tax_free_amount(taxFreeAmount)
-            .approval_url(approvalUrl)
+            .approval_url(sb.toString())
             .cancel_url(cancellUrl)
             .fail_url(failUrl)
             .build();

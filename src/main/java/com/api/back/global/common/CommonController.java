@@ -6,6 +6,7 @@ import com.api.back.global.common.response.WrapResponse;
 import com.api.back.global.config.security.jwt.JWTUtil;
 import com.api.back.global.error.exception.ErrorCode;
 import com.api.back.global.error.exception.InvalidValueException;
+import com.api.back.global.util.google.GoogleMeet;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,6 +16,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,9 +34,12 @@ public class CommonController {
     private final JWTUtil jwtUtil;
     private final MemberRepository memberRepository;
 
-    public CommonController(JWTUtil jwtUtil, MemberRepository memberRepository) {
+    private final GoogleMeet googleMeet;
+
+    public CommonController(JWTUtil jwtUtil, MemberRepository memberRepository, GoogleMeet googleMeet) {
         this.jwtUtil = jwtUtil;
         this.memberRepository = memberRepository;
+        this.googleMeet = googleMeet;
     }
 
     @GetMapping("/health")
@@ -128,5 +134,12 @@ public class CommonController {
         cookie.setHttpOnly(true);
 
         return cookie;
+    }
+
+    @GetMapping("/test")
+    public String test() throws GeneralSecurityException, IOException {
+
+        return googleMeet.createMeet();
+
     }
 }

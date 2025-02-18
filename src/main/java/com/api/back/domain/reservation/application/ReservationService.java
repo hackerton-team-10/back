@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ReservationService {
-    List<ReservationResponse> getReservationList(ReservationStatusRequest status);
-    ReservationResponse getReservation(Long reservationId);
+    List<ReservationResponse> getReservationList(Long memberId, ReservationStatusRequest status);
+    ReservationResponse getReservation(Long memberId, Long reservationId);
     ReservationResponse postReservation(Long memberId, Long designerId, LocalDateTime date, ConsultationType consultationType);
 }

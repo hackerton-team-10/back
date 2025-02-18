@@ -31,15 +31,16 @@ public class ReservationApi implements ReservationApiDocs {
 
     @Override
     @GetMapping({""})
-    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList(ReservationStatusRequest status) {
-        List<ReservationResponse> response = reservationService.getReservationList(status);
+    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, ReservationStatusRequest status) {
+        List<ReservationResponse> response = reservationService.getReservationList(customOAuth2User.getUserName(), status);
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 
     @Override
     @GetMapping({"/{reservationId}"})
-    public ResponseEntity<WrapResponse<ReservationResponse>> reservation(Long reservationId) {
-        ReservationResponse response = reservationService.getReservation(reservationId);
+    public ResponseEntity<WrapResponse<ReservationResponse>> reservation(@AuthenticationPrincipal
+    CustomOAuth2User customOAuth2User, Long reservationId) {
+        ReservationResponse response = reservationService.getReservation(customOAuth2User.getUserName(), reservationId);
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 

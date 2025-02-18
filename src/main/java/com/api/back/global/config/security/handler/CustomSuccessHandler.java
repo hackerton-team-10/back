@@ -56,7 +56,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         log.info("customUserDetails -> {}", customUserDetails.getEmail());
 
-        Optional<Member> member = memberRepository.findById(customUserDetails.getUserName() == null ? 0L : customUserDetails.getUserName()); //임의 값
+        Optional<Member> member = memberRepository.findByEmail(customUserDetails.getEmail() == null ? "" : customUserDetails.getEmail()); //임의 값
 
         member.ifPresentOrElse(existingMember -> {
             // 값이 있을 경우 처리
@@ -115,8 +115,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60*60*60);
-        //cookie.setSecure(true);   //https에 대해서만 허용할지 여부
-//        cookie.setPath("/");
+//        cookie.setSecure(true);   //https에 대해서만 허용할지 여부
+        cookie.setPath("/");
         cookie.setHttpOnly(true);
 
         return cookie;

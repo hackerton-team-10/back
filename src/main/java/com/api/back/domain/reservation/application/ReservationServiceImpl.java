@@ -9,8 +9,6 @@ import com.api.back.domain.member.exception.MemberNotFoundException;
 import com.api.back.domain.member.repository.MemberRepository;
 import com.api.back.domain.payment.entity.Payment;
 import com.api.back.domain.payment.repository.PaymentRepository;
-import com.api.back.domain.payment.type.PaymentMethod;
-import com.api.back.domain.payment.type.PaymentStatus;
 import com.api.back.domain.reservation.dto.response.PaymentInfo;
 import com.api.back.domain.reservation.dto.response.ReservationResponse;
 import com.api.back.domain.reservation.entity.Reservation;
@@ -21,6 +19,7 @@ import com.api.back.domain.reservation.type.ReservationStatus;
 import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.error.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,18 +37,30 @@ public class ReservationServiceImpl implements ReservationService {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public List<ReservationResponse> getReservationList(ReservationStatusRequest reservationStatusRequest) {
+    public List<ReservationResponse> getReservationList(Long memberId, ReservationStatusRequest reservationStatusRequest) {
         ReservationStatus reservationStatus = switch (reservationStatusRequest) {
             case PAYMENT_PENDING -> ReservationStatus.PAYMENT_PENDING;
             case CANCELLED -> ReservationStatus.CANCELLED;
             default -> ReservationStatus.RESERVATION_COMPLETED;
         };
-        Long memberId = 1L; // 임시 값, 로그인 기능 구현 후 토큰에서 가져오도록 수정 예정
-        List<ReservationResponse> response = reservationRepository.findAllByMemberIdAndStatus(memberId, reservationStatus).stream().map(reservation -> {
-            DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
-            PaymentInfo paymentInfo = paymentRepository.findById(reservation.getPayment().getId()).orElse(null).createPaymentInfo();
-            return reservation.createReservationResponse(designerInfo, paymentInfo);
-        }).toList();
+
+        List<ReservationResponse> response = reservationRepository.findAllByMemberIdAndStatus(memberId, reservationStatus)
+            .stream()
+            .map(reservation -> {
+                DesignerInfo designerInfo = Optional.ofNullable(reservation.getDesigner())
+                    .map(designer -> designerRepository.findById(designer.getId()).orElse(null))
+                    .map(Designer::createDesignerInfo)
+                    .orElse(null);
+
+                PaymentInfo paymentInfo = Optional.ofNullable(reservation.getPayment())
+                    .map(payment -> paymentRepository.findById(payment.getId()).orElse(null))
+                    .map(Payment::createPaymentInfo)
+                    .orElse(null);
+
+                return reservation.createReservationResponse(designerInfo, paymentInfo);
+            })
+            .toList();
+
 
         LocalDateTime now = LocalDateTime.now();
         if(reservationStatusRequest.equals(ReservationStatusRequest.CONSULTING_COMPLETED)){
@@ -65,8 +76,7 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public ReservationResponse getReservation(Long reservationId) {
-        Long memberId = 1L; // 임시 값, 로그인 기능 구현 후 토큰에서 가져오도록 수정 예정
+    public ReservationResponse getReservation(Long memberId, Long reservationId) {
 
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(MemberNotFoundException::new);
@@ -77,6 +87,9 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
+        if(reservation.getPayment() == null) {
+            return reservation.createReservationResponse(designerInfo, null);
+        }
         PaymentInfo paymentInfo = paymentRepository.findById(reservation.getPayment().getId()).orElse(null).createPaymentInfo();
 
         return reservation.createReservationResponse(designerInfo, paymentInfo);

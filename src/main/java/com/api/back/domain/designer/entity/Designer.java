@@ -47,6 +47,13 @@ public class Designer extends BaseEntity {
 
     private String location;
 
+    private Double latitude;
+
+    private Double longitude;
+
+    @Column(length = 100)
+    private String storeName;
+
     public DesignerResponse createDesignerResponse() {
         return DesignerResponse.builder()
                 .id(this.getId())
@@ -59,6 +66,9 @@ public class Designer extends BaseEntity {
                 .consultingFeeVideo(this.getConsultingFeeVideo())
                 .consultingFeeInPerson(this.getConsultingFeeInPerson())
                 .location(this.getLocation())
+                .latitude(this.getLatitude())
+                .longitude(this.longitude)
+                .storeName(this.getStoreName())
                 .build();
     }
     public DesignerInfo createDesignerInfo() {
@@ -67,6 +77,9 @@ public class Designer extends BaseEntity {
                 .designerName(this.getName())
                 .specialty(this.getSpecialty())
                 .location(this.getLocation())
+                .latitude(this.getLatitude())
+                .longitude(this.getLongitude())
+                .storeName(this.getStoreName())
                 .build();
     }
 }

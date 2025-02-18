@@ -23,6 +23,8 @@ public interface ReservationApiDocs {
     @Operation(summary = "예약 리스트 조회")
     @GetMapping({""})
     public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList(
+            @AuthenticationPrincipal
+            CustomOAuth2User customOAuth2User,
             @RequestParam
             ReservationStatusRequest status
     );
@@ -30,6 +32,8 @@ public interface ReservationApiDocs {
     @Operation(summary = "예약 조회")
     @GetMapping({"/{reservationId}"})
     public ResponseEntity<WrapResponse<ReservationResponse>> reservation(
+            @AuthenticationPrincipal
+            CustomOAuth2User customOAuth2User,
             @PathVariable(value = "reservationId", required = true) Long reservationId
     );
 
