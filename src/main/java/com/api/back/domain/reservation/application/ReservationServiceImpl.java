@@ -18,6 +18,7 @@ import com.api.back.domain.reservation.exception.ReservationNotAvailableExceptio
 import com.api.back.domain.reservation.repository.ReservationRepository;
 import com.api.back.domain.reservation.type.ConsultationType;
 import com.api.back.domain.reservation.type.ReservationStatus;
+import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.error.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -37,13 +38,30 @@ public class ReservationServiceImpl implements ReservationService {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public List<ReservationResponse> getReservationList() {
+    public List<ReservationResponse> getReservationList(ReservationStatusRequest reservationStatusRequest) {
+        ReservationStatus reservationStatus = switch (reservationStatusRequest) {
+            case PAYMENT_PENDING -> ReservationStatus.PAYMENT_PENDING;
+            case CANCELLED -> ReservationStatus.CANCELLED;
+            default -> ReservationStatus.RESERVATION_COMPLETED;
+        };
         Long memberId = 1L; // 임시 값, 로그인 기능 구현 후 토큰에서 가져오도록 수정 예정
-        return reservationRepository.findAllByMemberId(memberId).stream().map(reservation -> {
+        List<ReservationResponse> response = reservationRepository.findAllByMemberIdAndStatus(memberId, reservationStatus).stream().map(reservation -> {
             DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
             PaymentInfo paymentInfo = paymentRepository.findById(reservation.getPayment().getId()).orElse(null).createPaymentInfo();
             return reservation.createReservationResponse(designerInfo, paymentInfo);
         }).toList();
+
+        LocalDateTime now = LocalDateTime.now();
+        if(reservationStatusRequest.equals(ReservationStatusRequest.CONSULTING_COMPLETED)){
+            // 상담 완료 요청일 경우, 예약 시간이 지난 데이터만 내려주기
+            return response.stream().filter(v->now.isAfter(v.getDate())).toList();
+        }
+        if(reservationStatusRequest.equals(ReservationStatusRequest.RESERVATION_COMPLETED)){
+            // 예약 완료 요청(상담 전)일 경우, 예약 시간이 지나지 않은 데이터만 내려주기
+            return response.stream().filter(v->now.isBefore(v.getDate())).toList();
+        }
+
+        return response;
     }
 
     @Override
@@ -98,7 +116,7 @@ public class ReservationServiceImpl implements ReservationService {
                 .consultationFee(payment.getFee())
                 .date(date)
                 .googleMeetLink(googleMeetLink)
-                .status(ReservationStatus.PENDING)
+                .status(paymentMethod.equals(PaymentMethod.CASH) ? ReservationStatus.PAYMENT_PENDING : ReservationStatus.RESERVATION_COMPLETED) // TODO: 카카오 페이 관련 로직 연동 필요
                 .build());
 
         DesignerInfo designerInfo = designer.createDesignerInfo();
