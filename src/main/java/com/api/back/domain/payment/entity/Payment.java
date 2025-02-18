@@ -48,4 +48,6 @@ public class Payment extends BaseEntity {
                 .method(this.getMethod())
                 .build();
     }
+
+    public void updatePaymentStatus(PaymentStatus status) {this.status = status;}
 }

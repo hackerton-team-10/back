@@ -26,25 +26,42 @@ public interface PaymentApiDocs {
     @Parameters(value = {
         @Parameter(name = "itemName", description = "현재 예약하려는 상품의 이름"),
         @Parameter(name = "totalAmount", description = "총 금액"),
-        @Parameter(name = "taxFreeAmount", description = "총 금액과 동일하게 보내주시면 됩니다.")
+        @Parameter(name = "taxFreeAmount", description = "총 금액과 동일하게 보내주시면 됩니다."),
+        @Parameter(name = "reservationId", description = "예약 관련 ID입니다.")
     })
     @GetMapping({""})
     public ResponseEntity<WrapResponse<ResponsePayReadyContent>> requestPayUrl(
         @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
         @RequestParam("itemName") String itemName,
         @RequestParam("totalAmount") int totalAmount,
-        @RequestParam("taxFreeAmount") int taxFreeAmount
+        @RequestParam("taxFreeAmount") int taxFreeAmount,
+        @RequestParam("reservationId") Long reservationId
     );
 
     @Operation(summary = "결제 승인 요청 API",description = "결제 성공 이후 카카오 서버로 승인 요청을 위한 엔드포인트입니다.")
     @ApiResponse(responseCode = "200", description = "결제에 대한 정보만 있습니다.", content = @Content(schema = @Schema(implementation = ResponsePayApproveContent.class)))
     @Parameters(value = {
         @Parameter(name = "orderId", description = "주문번호 / 리디렉션 uri에서 가져오시면 됩니다."),
-        @Parameter(name = "pg_token", description = "결제 정보 토큰 / 리디렉션 uri에서 가져오시면 됩니다.")
+        @Parameter(name = "pg_token", description = "결제 정보 토큰 / 리디렉션 uri에서 가져오시면 됩니다."),
+        @Parameter(name = "reservationId", description = "예약 관련 ID입니다.")
     })
     @GetMapping("/callback")
     public ResponseEntity<WrapResponse<ResponsePayApproveContent>> approveProcess(
         @RequestParam("orderId") UUID orderId,
-        @RequestParam("pg_token") String pgToken
+        @RequestParam("pg_token") String pgToken,
+        @RequestParam("reservationId") Long reservationId
     );
+
+    @Operation(summary = "결제 취소 요청 API",description = "결제 취소/환불 진행 및 결제/예약 상태 변경")
+    @ApiResponse(responseCode = "200", description = "받아서 사용할 데이터는 없을 것 같습니다.", content = @Content(schema = @Schema(implementation = String.class)))
+    @Parameters(value = {
+        @Parameter(name = "orderId", description = "주문번호입니다."),
+        @Parameter(name = "reservationId", description = "예약 관련 ID입니다.")
+    })
+    @GetMapping("/cancel")
+    public ResponseEntity<WrapResponse<?>> approveProcess(
+        @RequestParam("orderId") UUID orderId,
+        @RequestParam("reservationId") Long reservationId
+    );
+
 }
