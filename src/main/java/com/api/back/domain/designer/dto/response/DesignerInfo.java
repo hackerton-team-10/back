@@ -1,6 +1,7 @@
 package com.api.back.domain.designer.dto.response;
 
 import com.api.back.domain.designer.type.Specialty;
+import jakarta.persistence.Column;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,4 +12,7 @@ public class DesignerInfo {
     String designerName;
     Specialty specialty;
     String location;
+    private Double latitude;
+    private Double longitude;
+    private String storeName;
 }

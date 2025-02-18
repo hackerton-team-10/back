@@ -9,8 +9,6 @@ import com.api.back.domain.member.exception.MemberNotFoundException;
 import com.api.back.domain.member.repository.MemberRepository;
 import com.api.back.domain.payment.entity.Payment;
 import com.api.back.domain.payment.repository.PaymentRepository;
-import com.api.back.domain.payment.type.PaymentMethod;
-import com.api.back.domain.payment.type.PaymentStatus;
 import com.api.back.domain.reservation.dto.response.PaymentInfo;
 import com.api.back.domain.reservation.dto.response.ReservationResponse;
 import com.api.back.domain.reservation.entity.Reservation;

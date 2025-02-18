@@ -210,10 +210,10 @@ kakao:
   pay-cancel:
     url: https://open-api.kakaopay.com/online/v1/payment/cancel
   approval:
-    url: http://localhost:8080/api/payment/callback # 프론트로 전환
+    url: http://localhost:5173/payment/redirect/success
   cancel:
-    url: https://infinitecode.tistory.com
+    url: http://localhost:5173/payment/redirect/fail
   fail:
-    url: https://infinitecode.tistory.com
+    url: http://localhost:5173/payment/redirect/fail
   secret:
     key: SECRET_KEY DEVD64D469E9C74110DE594208471D2218F20C42

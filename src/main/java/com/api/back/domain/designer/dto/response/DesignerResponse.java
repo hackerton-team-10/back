@@ -3,6 +3,7 @@ package com.api.back.domain.designer.dto.response;
 import com.api.back.domain.designer.type.Region;
 import com.api.back.domain.designer.type.Specialty;
 import com.api.back.domain.reservation.type.ConsultationType;
+import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.Builder;
@@ -27,4 +28,7 @@ public class DesignerResponse {
     private Integer consultingFeeVideo;
     private Integer consultingFeeInPerson;
     private String location;
+    private Double latitude;
+    private Double longitude;
+    private String storeName;
 }
