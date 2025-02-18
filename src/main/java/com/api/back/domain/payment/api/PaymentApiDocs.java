@@ -2,6 +2,7 @@ package com.api.back.domain.payment.api;
 
 import com.api.back.domain.payment.dto.response.ResponsePayApproveContent;
 import com.api.back.domain.payment.dto.response.ResponsePayReadyContent;
+import com.api.back.domain.payment.type.PaymentMethod;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
 import com.api.back.global.config.security.dto.CustomOAuth2User;

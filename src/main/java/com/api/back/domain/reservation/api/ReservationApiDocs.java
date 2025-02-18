@@ -43,8 +43,6 @@ public interface ReservationApiDocs {
             @RequestParam
             LocalDateTime date,
             @RequestParam
-            PaymentMethod paymentMethod,
-            @RequestParam
             ConsultationType consultationType
     );
 }

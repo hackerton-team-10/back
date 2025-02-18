@@ -3,6 +3,7 @@ package com.api.back.domain.reservation.entity;
 import com.api.back.domain.designer.dto.response.DesignerInfo;
 import com.api.back.domain.member.domain.Member;
 import com.api.back.domain.payment.entity.Payment;
+import com.api.back.domain.payment.type.PaymentMethod;
 import com.api.back.domain.reservation.dto.response.PaymentInfo;
 import com.api.back.domain.reservation.dto.response.ReservationResponse;
 import com.api.back.global.common.BaseEntity;
@@ -82,4 +83,5 @@ public class Reservation extends BaseEntity {
     public void updateStatus(ReservationStatus status) {this.status = status;}
 
     public void updatePayment(Payment payment) {this.payment = payment;}
+
 }

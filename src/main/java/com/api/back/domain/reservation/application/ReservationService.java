@@ -11,5 +11,5 @@ import java.util.List;
 public interface ReservationService {
     List<ReservationResponse> getReservationList(ReservationStatusRequest status);
     ReservationResponse getReservation(Long reservationId);
-    ReservationResponse postReservation(Long memberId, Long designerId, LocalDateTime date, PaymentMethod paymentMethod, ConsultationType consultationType);
+    ReservationResponse postReservation(Long memberId, Long designerId, LocalDateTime date, ConsultationType consultationType);
 }
