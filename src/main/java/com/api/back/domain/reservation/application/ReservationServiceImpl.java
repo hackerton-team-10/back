@@ -84,8 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationResponse postReservation(Long designerId, LocalDateTime date, PaymentMethod paymentMethod, ConsultationType consultationType) {
-        Long memberId = 1L; // 임시 값, 로그인 기능 구현 후 토큰에서 가져오도록 수정 예정
+    public ReservationResponse postReservation(Long memberId, Long designerId, LocalDateTime date, PaymentMethod paymentMethod, ConsultationType consultationType) {
 
         // 해당 날짜 예약 가능 여부 확인
         if (!isAvailableReservation(designerId, date)) {
@@ -95,34 +94,19 @@ public class ReservationServiceImpl implements ReservationService {
         Member member = memberRepository.getReferenceById(memberId);
         Designer designer = designerRepository.findById(designerId).orElseThrow(DesignerNotFoundException::new);
 
-        // TODO: 구글 미트 링크 생성 연동
-        // 구글 미트 링크 생성
-        String googleMeetLink = createGoogleMeetLink();
-
-        // TODO: 카카오 페이 관련 로직 연동 필요
-        // 결제 정보 생성
-        Payment payment = paymentRepository.save(Payment.builder()
-                .member(member)
-                .fee(consultationType.equals(ConsultationType.IN_PERSON) ? designer.getConsultingFeeInPerson() : designer.getConsultingFeeVideo())
-                .method(paymentMethod)
-                .status(paymentMethod.equals(PaymentMethod.CASH) ? PaymentStatus.PENDING : PaymentStatus.COMPLETED)
-                .build());
-
         // 예약하기
         Reservation reservation = reservationRepository.save(Reservation.builder()
                 .member(member)
                 .designer(designer)
-                .payment(payment)
                 .consultationType(consultationType)
-                .consultationFee(payment.getFee())
+                .consultationFee(consultationType.equals(ConsultationType.IN_PERSON) ? designer.getConsultingFeeInPerson() : designer.getConsultingFeeVideo())
                 .date(date)
-                .googleMeetLink(googleMeetLink)
-                .status(paymentMethod.equals(PaymentMethod.CASH) ? ReservationStatus.PAYMENT_PENDING : ReservationStatus.RESERVATION_COMPLETED) // TODO: 카카오 페이 관련 로직 연동 필요
+                .status(ReservationStatus.PAYMENT_PENDING)
                 .build());
 
         DesignerInfo designerInfo = designer.createDesignerInfo();
-        PaymentInfo paymentInfo = payment.createPaymentInfo();
-        return reservation.createReservationResponse(designerInfo, paymentInfo);
+
+        return reservation.createReservationResponse(designerInfo);
     }
 
     private Boolean isAvailableReservation(Long designerId, LocalDateTime date) {

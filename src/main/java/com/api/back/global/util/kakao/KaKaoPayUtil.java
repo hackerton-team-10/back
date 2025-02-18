@@ -5,7 +5,6 @@ import com.api.back.domain.payment.dto.RequestPayCancelContent;
 import com.api.back.domain.payment.dto.RequestPayReadyContent;
 import com.api.back.domain.payment.dto.response.ResponsePayApproveContent;
 import com.api.back.domain.payment.dto.response.ResponsePayReadyContent;
-import com.api.back.domain.payment.entity.Payment;
 import com.api.back.domain.payment.repository.PaymentRepository;
 import com.api.back.domain.reservation.repository.ReservationRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -35,16 +34,9 @@ public class KaKaoPayUtil {
 
     private final RestTemplate restTemplate;
 
-    private final PaymentRepository paymentRepository;
 
-    private final ReservationRepository reservationRepository;
-
-
-
-    public KaKaoPayUtil(RestTemplate restTemplate, PaymentRepository paymentRepository, ReservationRepository reservationRepository) {
+    public KaKaoPayUtil(RestTemplate restTemplate) {
         this.restTemplate = restTemplate;
-        this.paymentRepository = paymentRepository;
-        this.reservationRepository = reservationRepository;
     }
 
     public ResponseEntity<ResponsePayReadyContent> kakaoPayReadyCall(
@@ -74,20 +66,17 @@ public class KaKaoPayUtil {
         return response;
     }
 
-    // TODO : 취소 엔드포인트 작성 필요
-    public ResponseEntity<?> kakaoPayCancelCall(RequestPayCancelContent request) {
+    public ResponseEntity<String> kakaoPayCancelCall(RequestPayCancelContent request, Long reservationId) {
 
         log.info(request.toString());
+
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", secretKey);    //DEV Secret Key
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<RequestPayCancelContent> entity = new HttpEntity<>(request, headers);
 
-        ResponseEntity<?> response = restTemplate.postForEntity(cancelUrl, entity, ResponsePayApproveContent.class);
-
-        //TODO : payment 테이블 status pending -> REFUND 변경, reservation status COMPLITED -> CANCELLED 변경
-//        Payment payment = paymentRepository.findByPaymentId()
+        ResponseEntity<String> response = restTemplate.postForEntity(cancelUrl, entity, String.class);
 
         return response;
     }

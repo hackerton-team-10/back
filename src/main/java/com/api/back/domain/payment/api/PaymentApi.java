@@ -4,6 +4,7 @@ import com.api.back.domain.member.domain.Member;
 import com.api.back.domain.member.exception.MemberNotFoundException;
 import com.api.back.domain.member.repository.MemberRepository;
 import com.api.back.domain.payment.dto.RequestPayApproveContent;
+import com.api.back.domain.payment.dto.RequestPayCancelContent;
 import com.api.back.domain.payment.dto.RequestPayReadyContent;
 import com.api.back.domain.payment.dto.response.ResponsePayApproveContent;
 import com.api.back.domain.payment.dto.response.ResponsePayReadyContent;
@@ -12,6 +13,10 @@ import com.api.back.domain.payment.exception.PaymentInfoNotFound;
 import com.api.back.domain.payment.repository.PaymentRepository;
 import com.api.back.domain.payment.type.PaymentMethod;
 import com.api.back.domain.payment.type.PaymentStatus;
+import com.api.back.domain.reservation.entity.Reservation;
+import com.api.back.domain.reservation.exception.ReservationNotFoundException;
+import com.api.back.domain.reservation.repository.ReservationRepository;
+import com.api.back.domain.reservation.type.ReservationStatus;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
 import com.api.back.global.config.security.dto.CustomOAuth2User;
@@ -21,8 +26,10 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -49,15 +56,19 @@ public class PaymentApi implements PaymentApiDocs{
 
     private final PaymentRepository paymentRepository;
 
+    private final ReservationRepository reservationRepository;
+
     /**
      * 결제 준비 요청
      * **/
     @GetMapping({""})
+    @Transactional
     public ResponseEntity<WrapResponse<ResponsePayReadyContent>> requestPayUrl(
         @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
         @RequestParam("itemName") String itemName,
         @RequestParam("totalAmount") int totalAmount,
-        @RequestParam("taxFreeAmount") int taxFreeAmount
+        @RequestParam("taxFreeAmount") int taxFreeAmount,
+        @RequestParam("reservationId") Long reservationId
         ) {
 
         Member member = memberRepository.findById(customOAuth2User.getUserName()).orElseThrow(MemberNotFoundException::new);
@@ -85,7 +96,7 @@ public class PaymentApi implements PaymentApiDocs{
         String tid = Objects.requireNonNull(response.getBody(), "tid must not be null").getTid();
 
         //TODO : payment 엔티티 DB 저장 로직
-        paymentRepository.save(Payment.builder()
+        Payment payment = paymentRepository.save(Payment.builder()
                 .id(orderId)
                 .paymentId(tid)
                 .member(member)
@@ -94,6 +105,44 @@ public class PaymentApi implements PaymentApiDocs{
                 .status(PaymentStatus.PENDING)
             .build());
 
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(ReservationNotFoundException::new);
+
+        reservation.updatePayment(payment);
+
+        return ResponseEntity.ok(WrapResponse.create(response.getBody(), SuccessType.SIMPLE_STATUS));
+    }
+
+    /**
+     * 결제 취소 요청
+     * **/
+    @GetMapping("/cancel")
+    @Transactional
+    public ResponseEntity<WrapResponse<?>> approveProcess(
+        @RequestParam("orderId") UUID orderId,
+        @RequestParam("reservationId") Long reservationId
+    ) {
+
+        Payment payment = paymentRepository.findById(orderId).orElseThrow(PaymentInfoNotFound::new);
+
+        Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
+            ReservationNotFoundException::new);
+
+        RequestPayCancelContent request = RequestPayCancelContent.builder()
+            .tid(payment.getPaymentId())
+            .cancel_amount(payment.getFee())
+            .cancel_tax_free_amount(payment.getFee())
+            .build();
+
+
+        ResponseEntity<String> response = kaKaoPayUtil.kakaoPayCancelCall(request, reservationId);
+
+        //결제 및 예약 상태 변경
+        if(response.getStatusCode() == HttpStatus.OK) {
+
+            reservation.updateStatus(ReservationStatus.CANCELLED);  //더티 체킹 확인
+            payment.updatePaymentStatus(PaymentStatus.REFUND);
+        }
+
         return ResponseEntity.ok(WrapResponse.create(response.getBody(), SuccessType.SIMPLE_STATUS));
     }
 
@@ -101,9 +150,11 @@ public class PaymentApi implements PaymentApiDocs{
      * 결제 승인 요청
      * **/
     @GetMapping("/callback")
+    @Transactional
     public ResponseEntity<WrapResponse<ResponsePayApproveContent>> approveProcess(
         @RequestParam("orderId") UUID orderId,
-        @RequestParam("pg_token") String pgToken
+        @RequestParam("pg_token") String pgToken,
+        @RequestParam("reservationId") Long reservationId
     ) {
 
         log.info("order id -> {}", orderId);
@@ -120,22 +171,16 @@ public class PaymentApi implements PaymentApiDocs{
 
         ResponseEntity<ResponsePayApproveContent> response = kaKaoPayUtil.kakaoPayApproveCall(request);
 
-        System.out.println(response.getBody());
+        // 결제 및 예약 상태 변경
+        if(response.getStatusCode() == HttpStatus.OK) {
+            paymentInfo.updatePaymentStatus(PaymentStatus.COMPLETED);
+
+            Reservation reservation = reservationRepository.findById(reservationId).orElseThrow(
+                ReservationNotFoundException::new);
+
+            reservation.updateStatus(ReservationStatus.RESERVATION_COMPLETED);
+        }
+
         return ResponseEntity.ok(WrapResponse.create(response.getBody(), SuccessType.SIMPLE_STATUS));
     }
-
-    /**
-     * 결제 승인 요청
-     * **/
-//    @PutMapping("/cancel")
-//    public ResponseEntity<WrapResponse<?>> approveProcess(
-//        @RequestParam("paymentId") String paymentId,
-//        @RequestParam("fee") int fee
-//    ) {
-//
-////        ResponseEntity<ResponsePayApproveContent> response = kaKaoPayUtil.kakaoPayApproveCall(request);
-//
-//        System.out.println(response.getBody());
-//        return ResponseEntity.ok(WrapResponse.create(response.getBody(), SuccessType.SIMPLE_STATUS));
-//    }
 }
