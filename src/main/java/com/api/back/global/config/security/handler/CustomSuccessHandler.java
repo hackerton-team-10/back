@@ -99,10 +99,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             log.info("new refreshToken -> {}", refresh);
 
-            log.info("redirect url -> {}", onboardingUrl);
+            log.info("redirect url -> {}", redirectUrl);
 
             try {
-                response.sendRedirect(onboardingUrl);  // IOException 처리
+                response.sendRedirect(redirectUrl);  // IOException 처리
             } catch (IOException e) {
                 log.error("Redirect failed", e);
             }
