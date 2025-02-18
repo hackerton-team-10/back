@@ -23,6 +23,8 @@ public interface ReservationApiDocs {
     @Operation(summary = "예약 리스트 조회")
     @GetMapping({""})
     public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationList(
+            @AuthenticationPrincipal
+            CustomOAuth2User customOAuth2User,
             @RequestParam
             ReservationStatusRequest status
     );

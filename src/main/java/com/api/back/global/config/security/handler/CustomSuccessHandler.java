@@ -56,7 +56,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         log.info("customUserDetails -> {}", customUserDetails.getEmail());
 
-        Optional<Member> member = memberRepository.findById(customUserDetails.getUserName() == null ? 0L : customUserDetails.getUserName()); //임의 값
+        Optional<Member> member = memberRepository.findByEmail(customUserDetails.getEmail() == null ? "" : customUserDetails.getEmail()); //임의 값
 
         member.ifPresentOrElse(existingMember -> {
             // 값이 있을 경우 처리

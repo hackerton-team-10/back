@@ -38,13 +38,13 @@ public class ReservationServiceImpl implements ReservationService {
     private final PaymentRepository paymentRepository;
 
     @Override
-    public List<ReservationResponse> getReservationList(ReservationStatusRequest reservationStatusRequest) {
+    public List<ReservationResponse> getReservationList(Long memberId, ReservationStatusRequest reservationStatusRequest) {
         ReservationStatus reservationStatus = switch (reservationStatusRequest) {
             case PAYMENT_PENDING -> ReservationStatus.PAYMENT_PENDING;
             case CANCELLED -> ReservationStatus.CANCELLED;
             default -> ReservationStatus.RESERVATION_COMPLETED;
         };
-        Long memberId = 1L; // 임시 값, 로그인 기능 구현 후 토큰에서 가져오도록 수정 예정
+
         List<ReservationResponse> response = reservationRepository.findAllByMemberIdAndStatus(memberId, reservationStatus).stream().map(reservation -> {
             DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
             PaymentInfo paymentInfo = paymentRepository.findById(reservation.getPayment().getId()).orElse(null).createPaymentInfo();
