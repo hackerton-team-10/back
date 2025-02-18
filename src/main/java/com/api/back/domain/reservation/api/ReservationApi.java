@@ -7,9 +7,11 @@ import com.api.back.domain.reservation.type.ConsultationType;
 import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
+import com.api.back.global.config.security.dto.CustomOAuth2User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,27 +43,10 @@ public class ReservationApi implements ReservationApiDocs {
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 
-    @PostMapping("/{timeSlot}/hold")
-    public ResponseEntity<WrapResponse<?>> postReserveTimeSlot(@PathVariable String timeSlot, @RequestParam String userId) {
-
-        String key = "reservation:" + timeSlot;
-
-        // TODO : Redis 예약 시간 중복 체크 및 정보 저장 (TTS : 15분, 결제 QR 타임아웃 = 15분)
-//        // 이미 예약된 시간대라면 예약 불가
-//        if (redisTemplate.hasKey(key)) {
-//            return ResponseEntity.status(HttpStatus.CONFLICT).body("이미 예약된 시간대입니다.");
-//        }
-//
-//        // Redis에 예약 정보 저장 (10분 동안만 보류)
-//        redisTemplate.opsForValue().set(key, userId, Duration.ofMinutes(10));
-
-        return ResponseEntity.ok(WrapResponse.create(SuccessType.STATUS_204));
-    }
-
     @Override
     @PostMapping({""})
-    public ResponseEntity<WrapResponse<ReservationResponse>> postReservation(Long designerId, LocalDateTime date, PaymentMethod paymentMethod, ConsultationType consultationType) {
-        ReservationResponse response = reservationService.postReservation(designerId, date, paymentMethod, consultationType);
+    public ResponseEntity<WrapResponse<ReservationResponse>> postReservation(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, Long designerId, LocalDateTime date, PaymentMethod paymentMethod, ConsultationType consultationType) {
+        ReservationResponse response = reservationService.postReservation(customOAuth2User.getUserName(), designerId, date, paymentMethod, consultationType);
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 }

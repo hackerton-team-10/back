@@ -37,7 +37,7 @@ public class Reservation extends BaseEntity {
     private Designer designer;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "payment_id", nullable = false)
+    @JoinColumn(name = "payment_id")
     private Payment payment;
 
     @Enumerated(EnumType.STRING)
@@ -67,4 +67,19 @@ public class Reservation extends BaseEntity {
                 .payment(paymentInfo)
                 .build();
     }
+
+    public ReservationResponse createReservationResponse(DesignerInfo designerInfo) {
+        return ReservationResponse.builder()
+            .reservationId(this.getId())
+            .designer(designerInfo)
+            .consultationType(this.getConsultationType())
+            .date(this.getDate())
+            .googleMeetLink(this.getGoogleMeetLink())
+            .status(this.getStatus())
+            .build();
+    }
+
+    public void updateStatus(ReservationStatus status) {this.status = status;}
+
+    public void updatePayment(Payment payment) {this.payment = payment;}
 }
