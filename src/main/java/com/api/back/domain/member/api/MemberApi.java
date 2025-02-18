@@ -27,7 +27,7 @@ public class MemberApi implements MemberApiDocs{
     @PatchMapping()
     public ResponseEntity<WrapResponse<SuccessType>> memberP(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, @RequestParam("userName") String userName) {
 
-        log.info(customOAuth2User.getUserName());
+        log.info(String.valueOf(customOAuth2User.getUserName()));
 
         memberService.updateUserName(customOAuth2User.getUserName(), userName);
 

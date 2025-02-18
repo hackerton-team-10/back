@@ -95,6 +95,7 @@ public class ReservationServiceImpl implements ReservationService {
         Member member = memberRepository.getReferenceById(memberId);
         Designer designer = designerRepository.findById(designerId).orElseThrow(DesignerNotFoundException::new);
 
+        // TODO: 구글 미트 링크 생성 연동
         // 구글 미트 링크 생성
         String googleMeetLink = createGoogleMeetLink();
 

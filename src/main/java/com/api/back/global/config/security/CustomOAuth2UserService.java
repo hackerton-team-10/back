@@ -47,7 +47,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
 
         return new CustomOAuth2User(MemberDto.builder()
-            .username(googleId)
+            .googleId(googleId)
             .name(oAuth2Response.getName())
             .role("ROLE_USER")
             .email(oAuth2Response.getEmail())

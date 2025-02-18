@@ -107,7 +107,7 @@ public class SecurityConfig {
         //경로별 인가
         http
             .authorizeHttpRequests((auth) -> auth
-                .requestMatchers("/v1/**").permitAll()
+                .requestMatchers("/v1/**", "/payment/callback", "/payment/callback/test").permitAll()
                 .anyRequest().authenticated());
 
         //세션 설정 : STATELESS
