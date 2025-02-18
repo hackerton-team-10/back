@@ -14,6 +14,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CorsMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
+
         corsRegistry.addMapping("/**")
             .allowedOrigins("http://localhost:8080", "http://localhost:5173")  // 여러 포트 허용
             .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(),
@@ -22,6 +23,19 @@ public class CorsMvcConfig implements WebMvcConfigurer {
             .allowedHeaders("Authorization", "Content-Type")
             .exposedHeaders("Set-Cookie", "Authorization")
             .allowCredentials(true); // 쿠키 인증 요청 허용
+    }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true);
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:5173")); // 클라이언트 URL
+        config.setAllowedOrigins(Collections.singletonList("http://localhost:8080")); // 클라이언트 URL
+        config.setAllowedMethods(Collections.singletonList("*"));
+        config.setAllowedHeaders(Collections.singletonList("*"));
+        source.registerCorsConfiguration("/**", config);
+        return new CorsFilter(source);
     }
 
 }
