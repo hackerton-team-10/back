@@ -15,8 +15,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     @EntityGraph(attributePaths = {"designer", "payment"})
     List<Reservation> findAllByMemberIdAndStatus(Long memberId, ReservationStatus status);
 
-    @Query("SELECT r FROM Reservation r WHERE r.designer.id = :designerId AND FUNCTION('DATE', r.date) = :date")
-    List<Reservation> findAllByDesignerIdAndDate(@Param("designerId") Long designerId, @Param("date") LocalDate date);
+    @Query("SELECT r FROM Reservation r WHERE r.designer.id = :designerId AND FUNCTION('DATE', r.date) = :date AND r.status <> 'CANCELLED'")
+    List<Reservation> findAllByDesignerIdAndDateWithoutCancelled(@Param("designerId") Long designerId, @Param("date") LocalDate date);
 
     List<Reservation> findAllByDesignerIdAndDate(Long designerId, LocalDateTime date);
 }
