@@ -21,7 +21,7 @@ import com.api.back.domain.reservation.type.ReservationStatus;
 import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.error.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
-import java.util.Objects;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,12 +46,23 @@ public class ReservationServiceImpl implements ReservationService {
             default -> ReservationStatus.RESERVATION_COMPLETED;
         };
 
-        List<ReservationResponse> response = reservationRepository.findAllByMemberIdAndStatus(memberId, reservationStatus).stream().map(reservation -> {
-            DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
-            PaymentInfo paymentInfo = Objects.requireNonNull(
-                paymentRepository.findById(reservation.getPayment().getId()).orElse(null)).createPaymentInfo();
-            return reservation.createReservationResponse(designerInfo, paymentInfo);
-        }).toList();
+        List<ReservationResponse> response = reservationRepository.findAllByMemberIdAndStatus(memberId, reservationStatus)
+            .stream()
+            .map(reservation -> {
+                DesignerInfo designerInfo = Optional.ofNullable(reservation.getDesigner())
+                    .map(designer -> designerRepository.findById(designer.getId()).orElse(null))
+                    .map(Designer::createDesignerInfo)
+                    .orElse(null);
+
+                PaymentInfo paymentInfo = Optional.ofNullable(reservation.getPayment())
+                    .map(payment -> paymentRepository.findById(payment.getId()).orElse(null))
+                    .map(Payment::createPaymentInfo)
+                    .orElse(null);
+
+                return reservation.createReservationResponse(designerInfo, paymentInfo);
+            })
+            .toList();
+
 
         LocalDateTime now = LocalDateTime.now();
         if(reservationStatusRequest.equals(ReservationStatusRequest.CONSULTING_COMPLETED)){
@@ -78,8 +89,10 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
-        PaymentInfo paymentInfo = Objects.requireNonNull(
-            paymentRepository.findById(reservation.getPayment().getId()).orElse(null)).createPaymentInfo();
+        if(reservation.getPayment() == null) {
+            return reservation.createReservationResponse(designerInfo, null);
+        }
+        PaymentInfo paymentInfo = paymentRepository.findById(reservation.getPayment().getId()).orElse(null).createPaymentInfo();
 
         return reservation.createReservationResponse(designerInfo, paymentInfo);
     }

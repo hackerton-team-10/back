@@ -42,6 +42,7 @@ public class Payment extends BaseEntity {
     private PaymentStatus status;
 
     public PaymentInfo createPaymentInfo() {
+
         return PaymentInfo.builder()
                 .id(this.getId())
                 .fee(this.getFee())
