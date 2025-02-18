@@ -54,6 +54,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 토큰 생성
 
+        log.info("customUserDetails -> {}", customUserDetails.getEmail());
 
         Optional<Member> member = memberRepository.findById(customUserDetails.getUserName() == null ? 0L : customUserDetails.getUserName()); //임의 값
 
