@@ -84,7 +84,7 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     @Transactional
-    public ReservationResponse postReservation(Long memberId, Long designerId, LocalDateTime date, PaymentMethod paymentMethod, ConsultationType consultationType) {
+    public ReservationResponse postReservation(Long memberId, Long designerId, LocalDateTime date, ConsultationType consultationType) {
 
         // 해당 날짜 예약 가능 여부 확인
         if (!isAvailableReservation(designerId, date)) {

@@ -45,8 +45,8 @@ public class ReservationApi implements ReservationApiDocs {
 
     @Override
     @PostMapping({""})
-    public ResponseEntity<WrapResponse<ReservationResponse>> postReservation(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, Long designerId, LocalDateTime date, PaymentMethod paymentMethod, ConsultationType consultationType) {
-        ReservationResponse response = reservationService.postReservation(customOAuth2User.getUserName(), designerId, date, paymentMethod, consultationType);
+    public ResponseEntity<WrapResponse<ReservationResponse>> postReservation(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, Long designerId, LocalDateTime date, ConsultationType consultationType) {
+        ReservationResponse response = reservationService.postReservation(customOAuth2User.getUserName(), designerId, date, consultationType);
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 }
