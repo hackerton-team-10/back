@@ -1,5 +1,6 @@
 package com.api.back.domain.member.domain;
 
+import com.api.back.domain.member.dto.response.MemberResponse;
 import com.api.back.global.common.BaseEntity;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -46,4 +47,10 @@ public class Member extends BaseEntity {
 
     public void updateRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}
 
+    public MemberResponse createMemberResponse() {
+        return MemberResponse.builder()
+                .id(this.getId())
+                .userName(this.getName())
+                .build();
+    }
 }

@@ -21,7 +21,11 @@ public class MemberServiceImpl implements MemberService{
     public MemberServiceImpl(MemberRepository memberRepository) {
         this.memberRepository = memberRepository;
     }
-
+    @Override
+    public MemberResponse getMember(Long userId){
+        Member member = memberRepository.findById(userId).orElseThrow(() -> new BusinessLogicException(ErrorCode.MEMBER_NOT_FOUND));
+        return member.createMemberResponse();
+    }
     @Override
     public void updateUserName(Long userId, String userName) {
 
