@@ -21,6 +21,7 @@ import com.api.back.domain.reservation.type.ReservationStatus;
 import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.error.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,8 @@ public class ReservationServiceImpl implements ReservationService {
 
         List<ReservationResponse> response = reservationRepository.findAllByMemberIdAndStatus(memberId, reservationStatus).stream().map(reservation -> {
             DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
-            PaymentInfo paymentInfo = paymentRepository.findById(reservation.getPayment().getId()).orElse(null).createPaymentInfo();
+            PaymentInfo paymentInfo = Objects.requireNonNull(
+                paymentRepository.findById(reservation.getPayment().getId()).orElse(null)).createPaymentInfo();
             return reservation.createReservationResponse(designerInfo, paymentInfo);
         }).toList();
 
@@ -76,7 +78,8 @@ public class ReservationServiceImpl implements ReservationService {
         }
 
         DesignerInfo designerInfo = designerRepository.findById(reservation.getDesigner().getId()).orElse(null).createDesignerInfo();
-        PaymentInfo paymentInfo = paymentRepository.findById(reservation.getPayment().getId()).orElse(null).createPaymentInfo();
+        PaymentInfo paymentInfo = Objects.requireNonNull(
+            paymentRepository.findById(reservation.getPayment().getId()).orElse(null)).createPaymentInfo();
 
         return reservation.createReservationResponse(designerInfo, paymentInfo);
     }
