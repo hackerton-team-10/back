@@ -96,6 +96,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             newMember.updateRefreshToken(refresh);
 
+            memberRepository.save(newMember);
+
             response.addCookie(createCookie("Authorization", refresh));
 
             log.info("new refreshToken -> {}", refresh);
