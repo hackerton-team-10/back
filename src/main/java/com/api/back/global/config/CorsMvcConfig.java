@@ -16,7 +16,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
 
         corsRegistry.addMapping("/**")
-            .allowedOrigins("http://localhost:5173", "http://localhost:5174")  // 여러 포트 허용
+            .allowedOrigins("http://localhost:5173", "http://localhost:5174", "https://hair-fe-smoky.vercel.app")  // 여러 포트 허용
             .allowedMethods(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(),
                 HttpMethod.DELETE.name(), HttpMethod.HEAD.name(), HttpMethod.OPTIONS.name(),
                 HttpMethod.PATCH.name())

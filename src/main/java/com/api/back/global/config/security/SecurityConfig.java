@@ -64,7 +64,7 @@ public class SecurityConfig {
                     // 허용할 Origin 추가 (Swagger UI 및 클라이언트 주소)
                     configuration.setAllowedOrigins(Arrays.asList(
                         "http://localhost:5173", // 클라이언트 주소
-                        "http://hair-fe-smoky.vercel.app",
+                        "https://hair-fe-smoky.vercel.app",
                         "http://localhost:8080",   // Swagger UI 주소
                         "http://ec2-3-36-62-125.ap-northeast-2.compute.amazonaws.com:8080"  //EC2 도메인
                     ));
