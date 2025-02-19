@@ -7,6 +7,7 @@ import com.api.back.domain.reservation.type.ReservationStatusRequest;
 import com.api.back.global.common.response.WrapResponse;
 import com.api.back.global.config.security.dto.CustomOAuth2User;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -49,4 +50,12 @@ public interface ReservationApiDocs {
             @RequestParam
             ConsultationType consultationType
     );
+
+    @Operation(summary = "예약 취소", description = "예약 취소 시 예약 상태 CANCELD 변경")
+    @Parameter(name = "reservationId", description = "예약 ID")
+    @PostMapping("/cancel")
+    public ResponseEntity<WrapResponse<String>>  postCancelReservation(
+        @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+        @RequestParam
+        Long reservationId);
 }
