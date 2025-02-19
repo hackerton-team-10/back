@@ -92,8 +92,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 
             Long userId = newMember.getId(); // 자동 생성된 ID 값
-
             String refresh = jwtUtil.createJwt("refresh", userId, role, 86400000L);
+
+            newMember.updateRefreshToken(refresh);
 
             response.addCookie(createCookie("Authorization", refresh));
 
