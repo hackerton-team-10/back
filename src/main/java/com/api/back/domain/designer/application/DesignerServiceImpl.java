@@ -6,6 +6,7 @@ import com.api.back.domain.designer.dto.response.TimeSlot;
 import com.api.back.domain.designer.entity.Designer;
 import com.api.back.domain.designer.repository.DesignerRepository;
 import com.api.back.domain.designer.type.Region;
+import com.api.back.domain.designer.type.Specialty;
 import com.api.back.domain.member.exception.MemberNotFoundException;
 import com.api.back.domain.reservation.entity.Reservation;
 import com.api.back.domain.reservation.repository.ReservationRepository;
@@ -29,8 +30,8 @@ public class DesignerServiceImpl implements DesignerService {
     private final ReservationRepository reservationRepository;
 
     @Override
-    public List<DesignerResponse> getDesignerList(Optional<Region> region, Optional<ConsultationType> consultationType, Optional<Integer> minFee, Optional<Integer> maxFee) {
-        return designerRepository.findAllByFilters(region.orElse(null), consultationType.orElse(null), minFee.orElse(0), maxFee.orElse(2147483647)).stream().map(Designer::createDesignerResponse).toList();
+    public List<DesignerResponse> getDesignerList(Optional<Region> region, Optional<ConsultationType> consultationType, Optional<Specialty> specialty, Optional<Integer> minFee, Optional<Integer> maxFee) {
+        return designerRepository.findAllByFilters(region.orElse(null), consultationType.orElse(null), specialty.orElse(null), minFee.orElse(0), maxFee.orElse(2147483647)).stream().map(Designer::createDesignerResponse).toList();
     }
 
     @Override
