@@ -58,8 +58,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Optional<Member> member = memberRepository.findByEmail(customUserDetails.getEmail() == null ? "" : customUserDetails.getEmail()); //임의 값
 
+        // TODO : 첫 로그인 분기처리
         member.ifPresentOrElse(existingMember -> {
-            // 값이 있을 경우 처리
 
             String refresh = jwtUtil.createJwt("refresh", member.get().getId(), role, 86400000L);
 
