@@ -71,7 +71,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             memberRepository.save(existingMember);
 
             response.addCookie(createCookie("Authorization", refresh));
-
+// Set-Cookie 헤더에 SameSite=None 추가
+            response.addHeader("Set-Cookie", "Authorization=" + refresh + "; Path=/; Secure; HttpOnly; SameSite=None");
             log.info("new refreshToken -> {}", refresh);
             log.info("redirect url -> {}", redirectUrl);
 
@@ -102,6 +103,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             response.addCookie(createCookie("Authorization", refresh));
 
+            // Set-Cookie 헤더에 SameSite=None 추가
+            response.addHeader("Set-Cookie", "Authorization=" + refresh + "; Path=/; Secure; HttpOnly; SameSite=None");
+
             log.info("new refreshToken -> {}", refresh);
 
             log.info("redirect url -> {}", redirectUrl);
@@ -120,7 +124,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60*60*60);
-//        cookie.setSecure(true);   //https에 대해서만 허용할지 여부
+        cookie.setSecure(true);   //https에 대해서만 허용할지 여부
         cookie.setPath("/");
         cookie.setHttpOnly(true);
 
