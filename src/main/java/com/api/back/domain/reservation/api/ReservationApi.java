@@ -50,4 +50,12 @@ public class ReservationApi implements ReservationApiDocs {
         ReservationResponse response = reservationService.postReservation(customOAuth2User.getUserName(), designerId, date, consultationType);
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
+
+    @PostMapping("/cancel")
+    public ResponseEntity<WrapResponse<String>>  postCancelReservation(@AuthenticationPrincipal CustomOAuth2User customOAuth2User, Long reservationId) {
+
+        log.info("/reservation/cancel Endpoint Call");
+        reservationService.postCancelReservation(customOAuth2User.getUserName(), reservationId);
+        return ResponseEntity.ok(WrapResponse.create("Reservation Cancel Success", SuccessType.STATUS_204));
+    }
 }

@@ -84,4 +84,9 @@ public class Reservation extends BaseEntity {
 
     public void updatePayment(Payment payment) {this.payment = payment;}
 
+    public void removeReservation(ReservationStatus status) {
+        this.setRemovedDt(LocalDateTime.now());
+        this.status = status;
+    }
+
 }

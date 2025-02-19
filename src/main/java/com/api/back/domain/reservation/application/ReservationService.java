@@ -12,4 +12,5 @@ public interface ReservationService {
     List<ReservationResponse> getReservationList(Long memberId, ReservationStatusRequest status);
     ReservationResponse getReservation(Long memberId, Long reservationId);
     ReservationResponse postReservation(Long memberId, Long designerId, LocalDateTime date, ConsultationType consultationType);
+    void postCancelReservation(Long memberId, Long reservationId);
 }

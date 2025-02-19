@@ -122,6 +122,22 @@ public class ReservationServiceImpl implements ReservationService {
         return reservation.createReservationResponse(designerInfo);
     }
 
+    @Transactional
+    @Override
+    public void postCancelReservation(Long memberId, Long reservationId) {
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+            .orElseThrow(MemberNotFoundException::new);
+
+        // 예약자 ID와 요청자 ID가 같은지 확인
+        if (!reservation.getMember().getId().equals(memberId)) {
+            throw new ForbiddenException("자신의 예약이 아닙니다");
+        }
+
+        reservation.removeReservation(ReservationStatus.CANCELLED);
+
+    }
+
     private Boolean isAvailableReservation(Long designerId, LocalDateTime date) {
         if (LocalDateTime.now().isAfter(date)) return false;
         return reservationRepository.findAllByDesignerIdAndDate(designerId, date).isEmpty();
