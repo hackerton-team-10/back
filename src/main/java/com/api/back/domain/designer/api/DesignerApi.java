@@ -4,6 +4,7 @@ import com.api.back.domain.designer.application.DesignerService;
 import com.api.back.domain.designer.dto.response.DesignerResponse;
 import com.api.back.domain.designer.dto.response.DesignerTimesResponse;
 import com.api.back.domain.designer.type.Region;
+import com.api.back.domain.designer.type.Specialty;
 import com.api.back.domain.reservation.type.ConsultationType;
 import com.api.back.global.common.response.SuccessType;
 import com.api.back.global.common.response.WrapResponse;
@@ -27,10 +28,11 @@ public class DesignerApi implements DesignerApiDocs{
     public ResponseEntity<WrapResponse<List<DesignerResponse>>> designerList(
             @RequestParam(value="region", required = false) Optional<Region> region,
             @RequestParam(value="consultationType", required = false) Optional<ConsultationType> consultationType,
+            @RequestParam(value="specialty", required = false) Optional<Specialty> specialty,
             @RequestParam(value="minFee", required = false) Optional<Integer> minFee,
             @RequestParam(value="maxFee", required = false) Optional<Integer> maxFee
     ){
-        List<DesignerResponse> response = designerService.getDesignerList(region, consultationType, minFee, maxFee);
+        List<DesignerResponse> response = designerService.getDesignerList(region, consultationType, specialty, minFee, maxFee);
         return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 

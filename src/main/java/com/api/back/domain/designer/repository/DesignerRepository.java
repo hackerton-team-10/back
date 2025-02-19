@@ -2,6 +2,7 @@ package com.api.back.domain.designer.repository;
 
 import com.api.back.domain.designer.entity.Designer;
 import com.api.back.domain.designer.type.Region;
+import com.api.back.domain.designer.type.Specialty;
 import com.api.back.domain.reservation.type.ConsultationType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,7 @@ public interface DesignerRepository extends JpaRepository<Designer, Long> {
     @Query("SELECT d FROM Designer d " +
             "WHERE (:region IS NULL OR d.region = :region) " +
             "AND (:consultationType IS NULL OR d.consultationType = :consultationType) " +
+            "AND (:specialty IS NULL OR d.specialty = :specialty) " +
             "AND ((" +
             "    (:consultationType = 'in_person' AND d.consultingFeeInPerson BETWEEN COALESCE(:minFee, 0) AND COALESCE(:maxFee, 2147483647))" +
             ") OR (" +
@@ -26,6 +28,7 @@ public interface DesignerRepository extends JpaRepository<Designer, Long> {
     List<Designer> findAllByFilters(
             @Param("region") Region region,
             @Param("consultationType") ConsultationType consultationType,
+            @Param("specialty") Specialty specialty,
             @Param("minFee") Integer minFee,
             @Param("maxFee") Integer maxFee
     );

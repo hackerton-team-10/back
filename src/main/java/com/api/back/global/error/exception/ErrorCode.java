@@ -20,6 +20,7 @@ public enum ErrorCode {
     ARGUMENT_TYPE_MISMATCH(400, "잘못된 타입의 파라미터 요청입니다."),
     INVALID_REQUEST_PARAM(400, "잘못된 요청입니다."),
     QUERY_INVALID_PARAM(400, "잘못된 요청입니다."),
+    COOKIE_IS_NULL(400, "쿠키가 존재하지 않습니다."),
 
     // Member
     ACCESSTOKEN_EXPIRED(401,"엑세스 토큰이 만료되었습니다 재로그인이 필요합니다."),
