@@ -71,6 +71,11 @@ public class CommonController {
         //get refresh token
         String Authorization = null;
         Cookie[] cookies = request.getCookies();
+
+        if(cookies == null) {
+            throw new InvalidValueException(ErrorCode.COOKIE_IS_NULL);
+        }
+
         for (Cookie cookie : cookies) {
 
             if (cookie.getName().equals("Authorization")) {
@@ -140,7 +145,7 @@ public class CommonController {
         return cookie;
     }
 
-    @PostMapping("/reissue/test")
+    @PostMapping("/reissue")
     @Operation(summary = "리프레시 토큰을 통한 액세스 토큰 재발급 엔드포인트", description = "쿠키에 refreshToken 담아서 요청보내야 합니다.")
     @ApiResponse(responseCode = "201", description = "Header로 액세스 토큰 발급", content = {@Content(mediaType = "application/json", schema = @Schema(type = "String"))})
     @ApiResponse(responseCode = "400", description = "refreshToken missing 및 expired 시 응답", content = {@Content(mediaType = "application/json", schema = @Schema(implementation = InvalidValueException.class))})
