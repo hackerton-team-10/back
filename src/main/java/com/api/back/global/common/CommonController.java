@@ -73,16 +73,29 @@ public class CommonController {
         Cookie[] cookies = request.getCookies();
 
         if(cookies == null) {
-            throw new InvalidValueException(ErrorCode.COOKIE_IS_NULL);
+            //request에서 Authorization 헤더를 찾음
+            String authorization= request.getHeader("Authorization");
+
+            log.info("Authorization Headaer -> {}", authorization);
+
+            //Authorization 헤더 저장
+            if (authorization != null && authorization.startsWith("Bearer ")) {
+                //Bearer 부분 제거 후 순수 토큰만 획득
+                Authorization = authorization.split(" ")[1];
+            }
+
         }
+        else {
 
-        for (Cookie cookie : cookies) {
+            for (Cookie cookie : cookies) {
 
-            if (cookie.getName().equals("Authorization")) {
+                if (cookie.getName().equals("Authorization")) {
 
-                Authorization = cookie.getValue();
+                    Authorization = cookie.getValue();
+                }
             }
         }
+
 
         log.info("reissue Controller Call! -> {}", Authorization);
 
