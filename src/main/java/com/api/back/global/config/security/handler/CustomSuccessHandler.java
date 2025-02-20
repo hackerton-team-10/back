@@ -74,7 +74,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 // Set-Cookie 헤더에 SameSite=None 추가
             response.addHeader("Set-Cookie", "Authorization=" + refresh + "; Path=/; Secure; HttpOnly; SameSite=None");
             log.info("new refreshToken -> {}", refresh);
-            log.info("redirect url -> {}", redirectUrl);
+            log.info("redirect url -> {}", redirectUrl +"?refresh=" + refresh);
 
             try {
                 response.sendRedirect(redirectUrl);  // IOException 처리
@@ -108,7 +108,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
             log.info("new refreshToken -> {}", refresh);
 
-            log.info("redirect url -> {}", redirectUrl);
+            log.info("redirect url -> {}", redirectUrl +"?refresh=" + refresh);
 
             try {
                 response.sendRedirect(redirectUrl);  // IOException 처리
