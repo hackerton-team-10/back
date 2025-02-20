@@ -1,6 +1,7 @@
 package com.api.back.domain.payment.entity;
 
 import com.api.back.domain.member.domain.Member;
+import com.api.back.domain.payment.dto.response.ResponseAccountPayContent;
 import com.api.back.domain.reservation.dto.response.PaymentInfo;
 import com.api.back.global.common.BaseEntity;
 import com.api.back.domain.payment.type.PaymentMethod;
@@ -40,6 +41,15 @@ public class Payment extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PaymentStatus status;
+    public ResponseAccountPayContent createAccountPayContent() {
+
+        return ResponseAccountPayContent.builder()
+            .id(this.getId())
+            .fee(this.getFee())
+            .method(this.getMethod())
+            .status(this.getStatus())
+            .build();
+    }
 
     public PaymentInfo createPaymentInfo() {
 

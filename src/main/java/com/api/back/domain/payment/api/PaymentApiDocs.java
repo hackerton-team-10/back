@@ -17,6 +17,7 @@ import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Tag(name ="결제 모듈", description = "결제 관련 API 문서")
@@ -63,6 +64,14 @@ public interface PaymentApiDocs {
     public ResponseEntity<WrapResponse<?>> approveProcess(
         @RequestParam("orderId") UUID orderId,
         @RequestParam("reservationId") Long reservationId
+    );
+
+    @Operation(summary = "계좌이체 결제 요청", description = "계좌이체 결제 수단 후 결제하기 API")
+    @PostMapping("/account")
+    public ResponseEntity<WrapResponse<?>> postAccountPayment(
+        @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+        @RequestParam("reservationId") Long reservationId,
+        @RequestParam("fee") Integer fee
     );
 
 }

@@ -38,9 +38,11 @@ public enum ErrorCode {
     // Reservation
     RESERVATION_NOT_FOUND(404, "존재하지 않는 예약입니다."),
     RESERVATION_NOT_AVAILABLE(400, "현재 예약할 수 없는 상태입니다."),
+    RESERVATION_ALREADY_PAYMENT(400, "결제 수단이 이미 등록 되어있는 예약입니다."),
 
     //Payment
-    PAYMENT_NOT_FOUND(404, "존재하지 않는 결제입니다.")
+    PAYMENT_NOT_FOUND(404, "존재하지 않는 결제입니다."),
+    PAYMENT_ALREADY_EXIST(400, "이미 존재하는 결제정보입니다.")
     ;
 
     private final int status;
