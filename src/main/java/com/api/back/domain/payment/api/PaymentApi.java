@@ -3,9 +3,11 @@ package com.api.back.domain.payment.api;
 import com.api.back.domain.member.domain.Member;
 import com.api.back.domain.member.exception.MemberNotFoundException;
 import com.api.back.domain.member.repository.MemberRepository;
+import com.api.back.domain.payment.application.PaymentService;
 import com.api.back.domain.payment.dto.RequestPayApproveContent;
 import com.api.back.domain.payment.dto.RequestPayCancelContent;
 import com.api.back.domain.payment.dto.RequestPayReadyContent;
+import com.api.back.domain.payment.dto.response.ResponseAccountPayContent;
 import com.api.back.domain.payment.dto.response.ResponsePayApproveContent;
 import com.api.back.domain.payment.dto.response.ResponsePayReadyContent;
 import com.api.back.domain.payment.entity.Payment;
@@ -31,6 +33,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -57,6 +60,8 @@ public class PaymentApi implements PaymentApiDocs{
     private final PaymentRepository paymentRepository;
 
     private final ReservationRepository reservationRepository;
+
+    private final PaymentService paymentService;
 
     /**
      * 결제 준비 요청
@@ -185,5 +190,16 @@ public class PaymentApi implements PaymentApiDocs{
         }
 
         return ResponseEntity.ok(WrapResponse.create(response.getBody(), SuccessType.SIMPLE_STATUS));
+    }
+
+    @PostMapping("/account")
+    public ResponseEntity<WrapResponse<?>> postAccountPayment(
+        @AuthenticationPrincipal CustomOAuth2User customOAuth2User,
+        @RequestParam("reservationId") Long reservationId,
+        @RequestParam("fee") Integer fee
+    ) {
+
+        ResponseAccountPayContent response = paymentService.postAccountPayment(customOAuth2User.getUserName(), reservationId, fee);
+        return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
     }
 }
