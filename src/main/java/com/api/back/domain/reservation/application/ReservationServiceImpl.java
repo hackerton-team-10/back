@@ -17,11 +17,14 @@ import com.api.back.domain.reservation.repository.ReservationRepository;
 import com.api.back.domain.reservation.type.ConsultationType;
 import com.api.back.domain.reservation.type.ReservationStatus;
 import com.api.back.domain.reservation.type.ReservationStatusRequest;
+import com.api.back.global.common.response.WrapResponse;
+import com.api.back.global.config.security.dto.CustomOAuth2User;
 import com.api.back.global.error.exception.ForbiddenException;
 import jakarta.transaction.Transactional;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -71,6 +74,30 @@ public class ReservationServiceImpl implements ReservationService {
             // 예약 완료 요청(상담 전)일 경우, 예약 시간이 지나지 않은 데이터만 내려주기
             return response.stream().filter(v->now.isBefore(v.getDate())).toList();
         }
+
+        return response;
+    }
+
+    @Override
+    public List<ReservationResponse> getReservationAllList(
+        Long memberId) {
+
+        List<ReservationResponse> response = reservationRepository.findAllByMemberId(memberId)
+            .stream()
+            .map(reservation -> {
+                DesignerInfo designerInfo = Optional.ofNullable(reservation.getDesigner())
+                    .map(designer -> designerRepository.findById(designer.getId()).orElse(null))
+                    .map(Designer::createDesignerInfo)
+                    .orElse(null);
+
+                PaymentInfo paymentInfo = Optional.ofNullable(reservation.getPayment())
+                    .map(payment -> paymentRepository.findById(payment.getId()).orElse(null))
+                    .map(Payment::createPaymentInfo)
+                    .orElse(null);
+
+                return reservation.createReservationResponse(designerInfo, paymentInfo);
+            })
+            .toList();
 
         return response;
     }

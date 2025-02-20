@@ -14,7 +14,7 @@ import java.util.List;
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     @EntityGraph(attributePaths = {"designer", "payment"})
     List<Reservation> findAllByMemberIdAndStatus(Long memberId, ReservationStatus status);
-
+    List<Reservation> findAllByMemberId(Long memberId);
     @Query("SELECT r FROM Reservation r WHERE r.designer.id = :designerId AND FUNCTION('DATE', r.date) = :date AND r.status <> 'CANCELLED'")
     List<Reservation> findAllByDesignerIdAndDateWithoutCancelled(@Param("designerId") Long designerId, @Param("date") LocalDate date);
 

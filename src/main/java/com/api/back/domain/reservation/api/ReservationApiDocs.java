@@ -30,6 +30,11 @@ public interface ReservationApiDocs {
             ReservationStatusRequest status
     );
 
+    @Operation(summary = "예약 리스트 전체 조회")
+    @GetMapping({"/all"})
+    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationAllList(
+        @AuthenticationPrincipal CustomOAuth2User customOAuth2User);
+
     @Operation(summary = "예약 조회")
     @GetMapping({"/{reservationId}"})
     public ResponseEntity<WrapResponse<ReservationResponse>> reservation(

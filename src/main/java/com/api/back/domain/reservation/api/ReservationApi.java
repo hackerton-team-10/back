@@ -37,6 +37,13 @@ public class ReservationApi implements ReservationApiDocs {
     }
 
     @Override
+    @GetMapping({"/all"})
+    public ResponseEntity<WrapResponse<List<ReservationResponse>>> reservationAllList(@AuthenticationPrincipal CustomOAuth2User customOAuth2User) {
+        List<ReservationResponse> response = reservationService.getReservationAllList(customOAuth2User.getUserName());
+        return ResponseEntity.ok(WrapResponse.create(response, SuccessType.SIMPLE_STATUS));
+    }
+
+    @Override
     @GetMapping({"/{reservationId}"})
     public ResponseEntity<WrapResponse<ReservationResponse>> reservation(@AuthenticationPrincipal
     CustomOAuth2User customOAuth2User, Long reservationId) {

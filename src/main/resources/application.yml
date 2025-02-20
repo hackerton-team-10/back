@@ -87,11 +87,11 @@ kakao:
   pay-cancel:
     url: https://open-api.kakaopay.com/online/v1/payment/cancel
   approval:
-    url: http://localhost:8080/api/payment/callback # 프론트로 전환
+    url: https://hair-fe-smoky.vercel.app/payment/redirect/success
   cancel:
-    url: https://infinitecode.tistory.com
+    url: https://hair-fe-smoky.vercel.app/payment/redirect/fail
   fail:
-    url: https://infinitecode.tistory.com
+    url: https://hair-fe-smoky.vercel.app/payment/redirect/fail
   secret:
     key: SECRET_KEY DEVD64D469E9C74110DE594208471D2218F20C42
 ---
