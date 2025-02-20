@@ -148,11 +148,11 @@ kakao:
   pay-cancel:
     url: https://open-api.kakaopay.com/online/v1/payment/cancel
   approval:
-    url: https://playbus-hair-back-24bd2f0b794a.herokuapp.com/payment/redirect/success
+    url: https://hair-fe-smoky.vercel.app/payment/redirect/success
   cancel:
-    url: https://playbus-hair-back-24bd2f0b794a.herokuapp.com/payment/redirect/fail
+    url: https://hair-fe-smoky.vercel.app/payment/redirect/fail
   fail:
-    url: https://playbus-hair-back-24bd2f0b794a.herokuapp.com/payment/redirect/fail
+    url: https://hair-fe-smoky.vercel.app/payment/redirect/fail
   secret:
     key: SECRET_KEY DEVD64D469E9C74110DE594208471D2218F20C42
 
