@@ -135,7 +135,7 @@ public class CommonController {
         String role = jwtUtil.getRole(Authorization);
 
         //make new JWT
-        String newAccess = jwtUtil.createJwt("access", jwtUtil.getUsername(Authorization), role, 600000L);
+        String newAccess = jwtUtil.createJwt("access", jwtUtil.getUsername(Authorization), role, 600000000L);
 //        String newRefresh = jwtUtil.createJwt("refresh", userName, role, 86400000L);
 
         // TODO : RefreshToken Rotate 추가를 위한 DB 갱신 로직 작성
