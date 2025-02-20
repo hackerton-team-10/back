@@ -135,9 +135,9 @@ spring:
 
 # 로그인 성공 시 URL
 redirect:
-  url: hair-fe-smoky.vercel.app/home
+  url: https://hair-fe-smoky.vercel.app/home
   onboarding:
-    url: hair-fe-smoky.vercel.app/home
+    url: https://hair-fe-smoky.vercel.app/home
 
 # KaKaoPay
 kakao:
